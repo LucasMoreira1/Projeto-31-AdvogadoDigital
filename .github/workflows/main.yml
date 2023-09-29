@@ -1,0 +1,17 @@
+name: Deploy-para-AWS-S3
+on: push
+jobs: 
+  web-deploy:
+    name: Deploy
+    runs-on: ubuntu-latest
+    steps:
+      - name: Pegar codigo mais recente
+        uses: actions/checkout@v2
+      - name: Configurar Credenciais AWS
+        uses: aws-actions/configure-aws-credentials@v1
+        with: 
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_ID }}
+          aws-region: sa-east-1
+      - name: Copiar para S3
+        run: aws s3 sync ./ s3://advogadodigital.click
