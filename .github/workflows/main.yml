@@ -3,7 +3,7 @@ on: push
 jobs: 
   web-deploy:
     name: Deploy
-    runs-on: ubutu-latest
+    runs-on: ubuntu-latest
     steps:
       - name: Pegar codigo mais recente
         uses: actions/checkout@v2
