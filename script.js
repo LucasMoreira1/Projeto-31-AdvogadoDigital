@@ -15,7 +15,7 @@ document.addEventListener('DOMContentLoaded', function () {
         };
 
         // Envie a requisição POST para o backend
-        fetch('https://node-do-zero-cw7v.onrender.com/cliente', {
+        fetch('https://advogadodigital.onrender.com/cliente', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
