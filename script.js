@@ -64,43 +64,27 @@ acceptPrivacyEl.addEventListener('click', function() {
 // DarkMode
 //
 
-var themeToggleDarkIcon = document.getElementById('theme-toggle-dark-icon');
-var themeToggleLightIcon = document.getElementById('theme-toggle-light-icon');
+function darkModeToggle(){
+    const darkMode = document.getElementById('initial')
+    const logoLight = document.getElementById('logo-light')
+    const logoLightFooter = document.getElementById('logo-light-footer')
+    const logoDark = document.getElementById('logo-dark')
+    const logoDarkFooter = document.getElementById('logo-dark-footer')
 
-// Change the icons inside the button based on previous settings
-if (localStorage.getItem('color-theme') === 'dark' || (!('color-theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
-    themeToggleLightIcon.classList.remove('hidden');
-} else {
-    themeToggleDarkIcon.classList.remove('hidden');
-}
 
-var themeToggleBtn = document.getElementById('theme-toggle');
-
-themeToggleBtn.addEventListener('click', function() {
-
-    // toggle icons inside button
-    themeToggleDarkIcon.classList.toggle('hidden');
-    themeToggleLightIcon.classList.toggle('hidden');
-
-    // if set via local storage previously
-    if (localStorage.getItem('color-theme')) {
-        if (localStorage.getItem('color-theme') === 'light') {
-            document.documentElement.classList.add('dark');
-            localStorage.setItem('color-theme', 'dark');
-        } else {
-            document.documentElement.classList.remove('dark');
-            localStorage.setItem('color-theme', 'light');
-        }
-
-    // if NOT set via local storage previously
+    if (darkMode.classList.contains('dark')){
+        darkMode.classList.remove('dark')
+        logoDark.classList.add('hidden')
+        logoDarkFooter.classList.add('hidden')
+        logoLight.classList.remove('hidden')
+        logoLightFooter.classList.remove('hidden')
     } else {
-        if (document.documentElement.classList.contains('dark')) {
-            document.documentElement.classList.remove('dark');
-            localStorage.setItem('color-theme', 'light');
-        } else {
-            document.documentElement.classList.add('dark');
-            localStorage.setItem('color-theme', 'dark');
-        }
+        darkMode.classList.add('dark')
+        logoDark.classList.remove('hidden')
+        logoDarkFooter.classList.remove('hidden')
+        logoLight.classList.add('hidden')
+        logoLightFooter.classList.add('hidden')
     }
-    
-});
+
+
+}
