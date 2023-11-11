@@ -15,16 +15,25 @@ function darkModeToggle(){
     const darkMode = document.getElementById('initial')
     const logoLight = document.getElementById('logo-light')
     const logoDark = document.getElementById('logo-dark')
+    const iconSun = document.getElementById('icon-sun')
+    const iconMoon = document.getElementById('icon-moon')
 
 
     if (darkMode.classList.contains('dark')){
         darkMode.classList.remove('dark')
         logoDark.classList.add('hidden')
         logoLight.classList.remove('hidden')
+        logoLight.classList.remove('dark:hidden')
+        iconSun.classList.add('hidden')
+        iconMoon.classList.remove('hidden')
+
     } else {
         darkMode.classList.add('dark')
         logoDark.classList.remove('hidden')
         logoLight.classList.add('hidden')
+        logoLight.classList.remove('dark:hidden')
+        iconSun.classList.remove('hidden')
+        iconMoon.classList.add('hidden')
     }
 }
 

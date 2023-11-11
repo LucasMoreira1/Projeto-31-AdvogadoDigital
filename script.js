@@ -19,6 +19,9 @@ function darkModeToggle(){
     const logoLightFooter = document.getElementById('logo-light-footer')
     const logoDark = document.getElementById('logo-dark')
     const logoDarkFooter = document.getElementById('logo-dark-footer')
+    const iconSun = document.getElementById('icon-sun')
+    const iconMoon = document.getElementById('icon-moon')
+
 
 
     if (darkMode.classList.contains('dark')){
@@ -26,7 +29,11 @@ function darkModeToggle(){
         logoDark.classList.add('hidden')
         logoDarkFooter.classList.add('hidden')
         logoLight.classList.remove('hidden')
+        logoLight.classList.remove('dark:hidden')
         logoLightFooter.classList.remove('hidden')
+        logoLightFooter.classList.remove('dark:hidden')
+        iconSun.classList.add('hidden')
+        iconMoon.classList.remove('hidden')
     } else {
         darkMode.classList.add('dark')
         logoDark.classList.remove('hidden')
@@ -34,6 +41,9 @@ function darkModeToggle(){
         logoLight.classList.add('hidden')
         logoLight.classList.remove('dark:hidden')
         logoLightFooter.classList.add('hidden')
+        logoLightFooter.classList.remove('dark:hidden')
+        iconSun.classList.remove('hidden')
+        iconMoon.classList.add('hidden')
     }
 
 
