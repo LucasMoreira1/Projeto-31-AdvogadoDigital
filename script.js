@@ -1,3 +1,44 @@
+//
+// DarkMode
+//
+
+const darkMode = document.getElementById('initial')
+const logoDark = document.getElementById('logo-dark')
+const logoDarkFooter = document.getElementById('logo-dark-footer')
+
+
+if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+  darkMode.classList.add('dark')
+  logoDark.classList.remove('hidden')
+  logoDarkFooter.classList.remove('hidden')
+}
+
+function darkModeToggle(){
+    const darkMode = document.getElementById('initial')
+    const logoLight = document.getElementById('logo-light')
+    const logoLightFooter = document.getElementById('logo-light-footer')
+    const logoDark = document.getElementById('logo-dark')
+    const logoDarkFooter = document.getElementById('logo-dark-footer')
+
+
+    if (darkMode.classList.contains('dark')){
+        darkMode.classList.remove('dark')
+        logoDark.classList.add('hidden')
+        logoDarkFooter.classList.add('hidden')
+        logoLight.classList.remove('hidden')
+        logoLightFooter.classList.remove('hidden')
+    } else {
+        darkMode.classList.add('dark')
+        logoDark.classList.remove('hidden')
+        logoDarkFooter.classList.remove('hidden')
+        logoLight.classList.add('hidden')
+        logoLight.classList.remove('dark:hidden')
+        logoLightFooter.classList.add('hidden')
+    }
+
+
+}
+
 document.addEventListener('DOMContentLoaded', function () {
     const formulario = document.getElementById('formularioLead');
 
@@ -60,31 +101,4 @@ acceptPrivacyEl.addEventListener('click', function() {
 
 
 
-//
-// DarkMode
-//
 
-function darkModeToggle(){
-    const darkMode = document.getElementById('initial')
-    const logoLight = document.getElementById('logo-light')
-    const logoLightFooter = document.getElementById('logo-light-footer')
-    const logoDark = document.getElementById('logo-dark')
-    const logoDarkFooter = document.getElementById('logo-dark-footer')
-
-
-    if (darkMode.classList.contains('dark')){
-        darkMode.classList.remove('dark')
-        logoDark.classList.add('hidden')
-        logoDarkFooter.classList.add('hidden')
-        logoLight.classList.remove('hidden')
-        logoLightFooter.classList.remove('hidden')
-    } else {
-        darkMode.classList.add('dark')
-        logoDark.classList.remove('hidden')
-        logoDarkFooter.classList.remove('hidden')
-        logoLight.classList.add('hidden')
-        logoLightFooter.classList.add('hidden')
-    }
-
-
-}
