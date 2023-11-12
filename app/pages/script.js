@@ -64,19 +64,59 @@ function showPassword(){
 const loginForm = document.querySelector('form');
 
 // Adicionar um ouvinte de evento para a submissão do formulário
-loginForm.addEventListener('submit', function (event) {
+async function realizarLogin(event) {
+  console.log('Início da função realizarLogin');
+
   event.preventDefault(); // Impedir o envio padrão do formulário
 
-  const email = document.querySelector('#email').value;
-  const password = document.querySelector('#password').value;
+  const email = document.getElementById('email').value;
+  const senha = document.getElementById('password').value;
 
-  // Verificar as credenciais do usuário (substitua isso com sua própria lógica)
-  if (email === 'admin@admin.com' && password === 'admin1') {
-    // Credenciais válidas, redirecionar para a página de home.html
-    window.location.href = 'home.html';
-  } else {
-    // Credenciais inválidas, exibir o modal
-    const modal = document.getElementById('botao-senha-invalida');
-    modal.click();
+  console.log('Email:', email);
+  console.log('Password:', senha);
+
+  // Enviar uma solicitação para verificar as credenciais
+  const response = await fetch('https://advogadodigital.onrender.com/login/validacao', {
+      method: 'POST',
+      headers: {
+          'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ email, senha }),
+  });
+
+  try {
+      const data = await response.json();
+
+      // Verificar a resposta do backend
+    if (response.ok) {
+        // Credenciais válidas, armazenar informações do usuário no Local Storage
+        const userInfo = data.userInfo;
+        localStorage.setItem('userInfo', JSON.stringify(userInfo));
+    
+        // Redirecionar para a página de home.html
+        window.location.href = 'home.html';
+        console.log("ok");
+    } else {
+        // Credenciais inválidas, exibir o modal ou mensagem de erro
+        const modal = document.getElementById('botao-senha-invalida');
+        console.log("not-ok", data.message);
+        modal.click();
+    }
+  } catch (error) {
+      console.error('Erro ao processar a resposta JSON:', error);
+      // Tratar o erro, exibir uma mensagem ou fazer algo apropriado
   }
+
+  console.log('Fim da função realizarLogin');
+}
+
+
+document.addEventListener('DOMContentLoaded', function () {
+  const loginForm = document.querySelector('form');
+
+  loginForm.addEventListener('submit', function (event) {
+      event.preventDefault(); // Impedir o envio padrão do formulário
+      realizarLogin(event);
+  });
 });
+

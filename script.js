@@ -49,48 +49,6 @@ function darkModeToggle(){
 
 }
 
-document.addEventListener('DOMContentLoaded', function () {
-    const formulario = document.getElementById('formularioLead');
-
-    formulario.addEventListener('submit', function (event) {
-        event.preventDefault(); // Impede o envio padrão do formulário
-
-        // Obtenha os valores do formulário
-        const nome = document.getElementById('name').value;
-        const email = document.getElementById('email').value;
-
-        // Crie um objeto com os dados a serem enviados
-        const data = {
-            nome: nome,
-            email: email
-        };
-
-        // Envie a requisição POST para o backend
-        fetch('https://advogadodigital.onrender.com/cliente', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(data)
-        })
-        .then(response => {
-            if (response.ok) {
-                // A requisição foi bem-sucedida
-                // Você pode fazer algo aqui, como redirecionar o usuário ou exibir uma mensagem de sucesso
-                console.log('Requisição POST bem-sucedida');
-            } else {
-                // A requisição falhou, trate o erro aqui
-                console.error('Erro na requisição POST');
-            }
-        })
-        .catch(error => {
-            console.error('Erro na requisição POST:', error);
-        });
-    });
-});
-
-
-
 const modalEl = document.getElementById('info-popup');
 const privacyModal = new Modal(modalEl, {
     placement: 'center'
@@ -110,5 +68,62 @@ acceptPrivacyEl.addEventListener('click', function() {
 });
 
 
+async function verificarEmailExistente(email) {
+    const response = await fetch(`https://advogadodigital.onrender.com/login/${email}`);
+    const data = await response.json();
+    return data.existe;
+}
 
+async function enviarFormulario() {
+    // Evitar o comportamento padrão do formulário
+    event.preventDefault();
 
+    // Obter valores dos campos do formulário
+    const escritorio = document.getElementById('escritorio').value;
+    const nome = document.getElementById('nome').value;
+    const email = document.getElementById('email').value;
+    const senha = document.getElementById('password').value;
+    const confirmSenha = document.getElementById('confirm-password').value;
+
+    // Verificar se as senhas coincidem
+    if (senha !== confirmSenha) {
+        alert('As senhas não coincidem. Por favor, tente novamente.');
+        return;
+    }
+
+    // Verificar se o e-mail já existe
+    const emailExistente = await verificarEmailExistente(email);
+
+    if (emailExistente) {
+        alert('Já existe um cadastro para este e-mail. Por favor, use um e-mail diferente.');
+        return;
+    }
+
+    // Criar objeto JSON com os dados do formulário
+    const data = {
+        nome: nome,
+        email: email,
+        tenant: escritorio,
+        senha: senha
+    };
+
+    // Enviar dados para o backend usando fetch
+    fetch('https://advogadodigital.onrender.com/login', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(data),
+    })
+    .then(response => response.json())
+    .then(data => {
+        console.log('Success:', data);
+        alert('Cadastro realizado com sucesso.');
+        // Lógica adicional após o sucesso, se necessário
+    })
+    .catch((error) => {
+        console.log('Error:', error);
+        alert('Erro no cadastro, contate o suporte.');
+        // Lógica de tratamento de erro, se necessário
+    });
+}
