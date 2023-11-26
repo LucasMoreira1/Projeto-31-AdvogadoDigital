@@ -8,7 +8,7 @@
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <title>Advogado Digital</title>
 </head>
-<body>
+<body class="dark:bg-gray-900">
     
     <nav class="fixed top-0 z-50 w-full bg-red-50 border-b border-gray-200 dark:bg-gray-800 dark:border-gray-700">
         <div class="px-3 py-3 lg:px-5 lg:pl-3">
@@ -99,7 +99,7 @@
         </li>
         
         <li>
-            <a href="#" class="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group">
+            <a href="#" id="suporteBtn" class="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group">
             <svg class="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
                 <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12.079 4.839a3 3 0 0 0-4.255.1M11 18h1.083A3.916 3.916 0 0 0 16 14.083V7A6 6 0 1 0 4 7v7m7 4v-1a1 1 0 0 0-1-1H9a1 1 0 0 0-1 1v1a1 1 0 0 0 1 1h1a1 1 0 0 0 1-1Zm-7-4V8H3a2 2 0 0 0-2 2v2a2 2 0 0 0 2 2h1Zm12-6h1a2 2 0 0 1 2 2v2a2 2 0 0 1-2 2h-1V8Z"/>
             </svg>
@@ -107,7 +107,7 @@
             </a>
         </li>
         <li>
-            <a href="#" class="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group">
+            <a href="#" id="duvidasBtn" class="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group">
             <svg class="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
                 <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7.529 7.988a2.502 2.502 0 0 1 5 .191A2.441 2.441 0 0 1 10 10.582V12m-.01 3.008H10M19 10a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"/>
             </svg>
@@ -160,13 +160,14 @@
     </div> 
 </section>
 
-    <div class="w-full p-8 ">
-    <div class="p-8 border-gray-200 border-dashed rounded-lg dark:border-gray-700 mt-14">
+<div class="mt-24 p-2 pt-4">
+    <div class="border-gray-200 border-dashed rounded-lg dark:border-gray-700">
         <div class="content">
         
         </div>
     </div>
-    </div>
+</div>
+    
 
 
     <!-- Referencias JavaScript -->
@@ -198,6 +199,42 @@
             localStorage.removeItem('userInfo');
             // Redirecione o usuário para a página de login
             window.location.href = '../../index.html';
+        });
+
+
+        const contentArea = document.querySelector(".content");
+        const clientesBtn = document.querySelector("#clientesBtn");
+        const documentosBtn = document.querySelector("#documentosBtn");
+        const agendaBtn = document.querySelector("#agendaBtn");
+        const financeiroBtn = document.querySelector("#financeiroBtn");
+        const suporteBtn = document.querySelector("#suporteBtn");
+        const duvidasBtn = document.querySelector("#duvidasBtn");
+
+
+        // Adicionar eventos aos botões
+        clientesBtn.addEventListener("click", () => {
+            // Carregar o template da página
+            fetch("/app/pages/clientes.html")
+                .then(response => response.text())
+                .then(data => {
+                    // Mostrar o conteúdo do template na home
+                    contentArea.innerHTML = data;
+
+                    // Iniciar componentes do Flowbite
+                    initFlowbite();
+                });
+        });
+        agendaBtn.addEventListener("click", () => {
+            // Carregar o template da página
+            fetch("/app/pages/agenda.html")
+                .then(response => response.text())
+                .then(data => {
+                    // Mostrar o conteúdo do template na home
+                    contentArea.innerHTML = data;
+
+                    // Iniciar componentes do Flowbite
+                    initFlowbite();
+                });
         });
     </script>
 </body>

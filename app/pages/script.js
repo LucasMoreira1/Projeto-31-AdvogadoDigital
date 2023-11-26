@@ -112,11 +112,40 @@ async function realizarLogin(event) {
 
 
 document.addEventListener('DOMContentLoaded', function () {
-  const loginForm = document.querySelector('form');
+    const loginForm = document.querySelector('form');
 
-  loginForm.addEventListener('submit', function (event) {
-      event.preventDefault(); // Impedir o envio padrão do formulário
-      realizarLogin(event);
-  });
+    loginForm.addEventListener('submit', function (event) {
+        event.preventDefault(); // Impedir o envio padrão do formulário
+        realizarLogin(event);
+    });
+
+});
+
+// Abrir paginas no centro da home.
+document.addEventListener("DOMContentLoaded", () => {
+    // Declarando area central e botoes
+    // const contentArea = document.querySelector(".content");
+    // const clientesBtn = document.querySelector("#clientesBtn");
+    // const documentosBtn = document.querySelector("#documentosBtn");
+    // const agendaBtn = document.querySelector("#agendaBtn");
+    // const financeiroBtn = document.querySelector("#financeiroBtn");
+    // const suporteBtn = document.querySelector("#suporteBtn");
+    // const duvidasBtn = document.querySelector("#duvidasBtn");
+
+
+    // // Adicionar eventos aos botões
+    // clientesBtn.addEventListener("click", () => {
+    //     console.log("teste")
+    //     // Carregar o template da página
+    //     fetch("/app/pages/clientes.html")
+    //         .then(response => response.text())
+    //         .then(data => {
+    //             // Mostrar o conteúdo do template na home
+    //             contentArea.innerHTML = data;
+
+    //             // Iniciar componentes do Flowbite
+    //             initFlowbite();
+    //         });
+    // });
 });
 
