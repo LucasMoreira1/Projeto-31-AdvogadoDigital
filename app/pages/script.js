@@ -149,3 +149,58 @@ document.addEventListener("DOMContentLoaded", () => {
     // });
 });
 
+async function verificarCPFExistente(CPF) {
+    const response = await fetch(`https://advogadodigital.onrender.com/clientes/${CPF}`);
+    const data = await response.json();
+    return data.existe;
+}
+
+async function enviarCadastroCliente() {
+    // Evitar o comportamento padrão do formulário
+    event.preventDefault();
+
+    
+    const userInfo = JSON.parse(localStorage.getItem('userInfo'));
+    
+    // Obter valores dos campos do formulário
+    const tenant = userInfo.tenant;
+    const nome = document.getElementById('nome').value;
+    const cpf = document.getElementById('cpf').value;
+    const estadocivil = document.getElementById('estadocivil').value;
+
+    // Verificar se o e-mail já existe
+    const cpfExistente = await verificarCPFExistente(CPF);
+
+    if (cpfExistente) {
+        alert('Já existe um cliente para este CPF. Por favor, verifique.');
+        return;
+    }
+
+    // Criar objeto JSON com os dados do formulário
+    const data = {
+        tenant: tenant,
+        nome: nome,
+        cpf: cpf,
+        estadocivil: estadocivil,
+    };
+
+    // Enviar dados para o backend usando fetch
+    fetch('https://advogadodigital.onrender.com/clientes', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(data),
+    })
+    .then(response => response.json())
+    .then(data => {
+        console.log('Success:', data);
+        alert('Cliente registrado com sucesso.');
+        // Lógica adicional após o sucesso, se necessário
+    })
+    .catch((error) => {
+        console.log('Error:', error);
+        alert('Erro no registrar, contate o suporte.');
+        // Lógica de tratamento de erro, se necessário
+    });
+}
