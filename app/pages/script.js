@@ -113,40 +113,11 @@ async function realizarLogin(event) {
 
 document.addEventListener('DOMContentLoaded', function () {
     const loginForm = document.querySelector('form');
-
+    
     loginForm.addEventListener('submit', function (event) {
         event.preventDefault(); // Impedir o envio padrão do formulário
         realizarLogin(event);
     });
-
-});
-
-// Abrir paginas no centro da home.
-document.addEventListener("DOMContentLoaded", () => {
-    // Declarando area central e botoes
-    // const contentArea = document.querySelector(".content");
-    // const clientesBtn = document.querySelector("#clientesBtn");
-    // const documentosBtn = document.querySelector("#documentosBtn");
-    // const agendaBtn = document.querySelector("#agendaBtn");
-    // const financeiroBtn = document.querySelector("#financeiroBtn");
-    // const suporteBtn = document.querySelector("#suporteBtn");
-    // const duvidasBtn = document.querySelector("#duvidasBtn");
-
-
-    // // Adicionar eventos aos botões
-    // clientesBtn.addEventListener("click", () => {
-    //     console.log("teste")
-    //     // Carregar o template da página
-    //     fetch("/app/pages/clientes.html")
-    //         .then(response => response.text())
-    //         .then(data => {
-    //             // Mostrar o conteúdo do template na home
-    //             contentArea.innerHTML = data;
-
-    //             // Iniciar componentes do Flowbite
-    //             initFlowbite();
-    //         });
-    // });
 });
 
 async function verificarCPFExistente(CPF) {
@@ -169,19 +140,19 @@ async function enviarCadastroCliente() {
     const estadocivil = document.getElementById('estadocivil').value;
 
     // Verificar se o e-mail já existe
-    const cpfExistente = await verificarCPFExistente(CPF);
+    // const cpfExistente = await verificarCPFExistente(CPF);
 
-    if (cpfExistente) {
-        alert('Já existe um cliente para este CPF. Por favor, verifique.');
-        return;
-    }
+    // if (cpfExistente) {
+    //     alert('Já existe um cliente para este CPF. Por favor, verifique.');
+    //     return;
+    // }
 
     // Criar objeto JSON com os dados do formulário
     const data = {
         tenant: tenant,
         nome: nome,
         cpf: cpf,
-        estadocivil: estadocivil,
+        estadocivil: estadocivil
     };
 
     // Enviar dados para o backend usando fetch
@@ -204,3 +175,90 @@ async function enviarCadastroCliente() {
         // Lógica de tratamento de erro, se necessário
     });
 }
+
+// Função para buscar clientes no backend
+async function buscarClientes() { 
+    try {
+        const resposta = await fetch('https://advogadodigital.onrender.com/clientes');
+        const clientes = await resposta.json();
+        return clientes;
+    } catch (error) {
+        console.error('Erro ao buscar clientes:', error);
+        throw error;
+    }
+}
+
+// Função para renderizar os dados na tabela
+async function renderizarTabela() {
+    const tbody = document.querySelector('tbody');
+
+    try {
+        // Buscar clientes no backend
+        const clientes = await buscarClientes();
+        // Limpar o conteúdo atual da tabela
+        tbody.innerHTML = '';
+
+        // Renderizar os novos dados na tabela
+        clientes.forEach((cliente) => {
+            const tr = document.createElement('tr');
+            tr.classList.add('bg-white', 'border-b', 'dark:bg-gray-800', 'dark:border-gray-700', 'hover:bg-gray-50', 'dark:hover:bg-gray-600');
+
+            // Adicionar checkbox
+            const tdCheckbox = document.createElement('td');
+            const checkbox = document.createElement('input');
+            checkbox.type = 'checkbox';
+            checkbox.classList.add('ml-3.5', 'w-4', 'h-4', 'text-blue-600', 'bg-gray-100', 'border-gray-300', 'rounded', 'focus:ring-blue-500', 'dark:focus:ring-blue-600', 'dark:ring-offset-gray-800', 'dark:focus:ring-offset-gray-800', 'focus:ring-2', 'dark:bg-gray-700', 'dark:border-gray-600');
+            tdCheckbox.appendChild(checkbox);
+            tr.appendChild(tdCheckbox);
+
+            // Adicionar as células da linha
+            Object.values(cliente).forEach((value) => {
+                const td = document.createElement('td');
+                td.classList.add('px-6', 'py-3')
+                td.textContent = value;
+                tr.appendChild(td);
+            });
+
+            // Adicionar ação (Editar)
+            const tdAcao = document.createElement('td');
+            const linkEditar = document.createElement('a');
+            linkEditar.href = '#';
+            linkEditar.classList.add('ml-4', 'font-medium', 'text-blue-600', 'dark:text-blue-500', 'hover:underline');
+            linkEditar.textContent = 'Editar';
+            tdAcao.appendChild(linkEditar);
+            tr.appendChild(tdAcao);
+
+            tbody.appendChild(tr);
+        });
+    } catch (error) {
+        console.error('Erro ao renderizar tabela:', error);
+    }
+}
+
+async function pesquisaCliente(){
+
+    // Seletor do input de pesquisa
+    const inputPesquisa = document.getElementById('pesquisaCliente');
+
+    // Função para filtrar as linhas da tabela
+    function filtrarTabela() {        
+        const termoPesquisa = inputPesquisa.value.toLowerCase();
+        
+        const linhasTabela = document.querySelectorAll('tbody tr');
+
+        linhasTabela.forEach((linha) => {
+            const textoLinha = linha.innerText.toLowerCase();
+
+            if (textoLinha.includes(termoPesquisa)) {
+                linha.style.display = ''; // Mostrar a linha se houver uma correspondência
+            } else {
+                linha.style.display = 'none'; // Ocultar a linha se não houver correspondência
+            }
+        });
+    }
+
+    // Adicionar ouvinte de evento para o evento 'input' (disparado enquanto você digita)
+    inputPesquisa.addEventListener('input', filtrarTabela);
+}
+
+
