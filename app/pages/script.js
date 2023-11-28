@@ -214,8 +214,12 @@ async function renderizarTabela() {
             // Adicionar as células da linha
             Object.values(cliente).forEach((value) => {
                 const td = document.createElement('td');
-                td.classList.add('px-6', 'py-3')
-                td.textContent = value;
+                td.classList.add('px-6', 'py-3');
+            
+                // Verificar se o valor é uma string antes de aplicar a formatação
+                const textoFormatado = typeof value === 'string' ? value.replace(/\b\w+/g, substr => substr.charAt(0).toUpperCase() + substr.slice(1).toLowerCase()).replace(/\b\w+(?=\))/g, substr => substr.toLowerCase()) : value;
+            
+                td.textContent = textoFormatado;
                 tr.appendChild(td);
             });
 
