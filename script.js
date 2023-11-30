@@ -67,9 +67,10 @@ acceptPrivacyEl.addEventListener('click', function() {
     privacyModal.hide();
 });
 
+// Criar Tenant (escritorio)
 
-async function verificarEmailExistente(email) {
-    const response = await fetch(`https://advogadodigital.onrender.com/login/${email}`);
+async function verificarEmailTenant(email) {
+    const response = await fetch(`https://advogadodigital.onrender.com/tenant/${email}`);
     const data = await response.json();
     return data.existe;
 }
@@ -80,50 +81,62 @@ async function enviarFormulario() {
 
     // Obter valores dos campos do formulário
     const escritorio = document.getElementById('escritorio').value;
-    const nome = document.getElementById('nome').value;
+    const responsavel = document.getElementById('responsavel').value;
     const email = document.getElementById('email').value;
-    const senha = document.getElementById('password').value;
-    const confirmSenha = document.getElementById('confirm-password').value;
-
-    // Verificar se as senhas coincidem
-    if (senha !== confirmSenha) {
-        alert('As senhas não coincidem. Por favor, tente novamente.');
-        return;
-    }
+    const telefone = document.getElementById('telefone').value;
 
     // Verificar se o e-mail já existe
-    const emailExistente = await verificarEmailExistente(email);
+    const emailExistente = await verificarEmailTenant(email);
 
     if (emailExistente) {
-        alert('Já existe um cadastro para este e-mail. Por favor, use um e-mail diferente.');
+        alert('Já existe um cadastro para este e-mail. Por favor, use um e-mail diferente ou entre em contato (12)99732-9778');
         return;
     }
 
     // Criar objeto JSON com os dados do formulário
     const data = {
-        nome: nome,
+        nome: escritorio,
+        responsavel: responsavel,
         email: email,
-        tenant: escritorio,
-        senha: senha
+        telefone: telefone
     };
 
     // Enviar dados para o backend usando fetch
-    fetch('https://advogadodigital.onrender.com/login', {
+    fetch('https://advogadodigital.onrender.com/tenant', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
         },
         body: JSON.stringify(data),
     })
-    .then(response => response.json())
+    .then(reply => {
+        try {
+            return reply.json();
+        } catch (error) {
+            console.error('Erro ao analisar JSON:', error);
+            throw error;
+        }
+    })
     .then(data => {
         console.log('Success:', data);
-        alert('Cadastro realizado com sucesso.');
+
+        // Armazenar informações do Tenant, incluindo o ID, no localStorage
+        const tenantInfo = {
+            id: data.novoTenantId,
+            nome: escritorio,
+            responsavel: responsavel,
+            email: email,
+            telefone: telefone
+        };
+        localStorage.setItem("tenantInfo", JSON.stringify(tenantInfo));
+        
+        alert('Cadastro realizado com sucesso. Agora crie o Login para seu escritório.');
+        window.location.href = '/app/pages/cadastro.html'
         // Lógica adicional após o sucesso, se necessário
     })
     .catch((error) => {
         console.log('Error:', error);
-        alert('Erro no cadastro, contate o suporte.');
+        alert('Erro no cadastro, contate o suporte. (12)99732-9778');
         // Lógica de tratamento de erro, se necessário
     });
 }

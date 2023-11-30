@@ -42,31 +42,91 @@ function darkModeToggle(){
 //
 
 function showPassword(){
-    var password = document.getElementById("password");
+    var password = document.getElementById("senha");
     var passwordIcon = document.getElementById("PasswordIconHide")
+    var ConfirmPassword = document.getElementById("confirmaSenha");
+    var ConfirmPasswordIcon = document.getElementById("ConfirmPasswordIconHide")
 
     if (password.type === "password") {
         password.type = "text";
         passwordIcon.classList.add('hidden');
+        ConfirmPassword.type = "text";
+        ConfirmPasswordIcon.classList.add('hidden');
         } else {
             password.type = "password";
             passwordIcon.classList.remove('hidden');
+            ConfirmPassword.type = "password";
+            ConfirmPasswordIcon.classList.remove('hidden');
             }
             return false;
-
 }
 
 //
 // Login
 //
 
-// Selecionar o formulário
-const loginForm = document.querySelector('form');
+// async function verificarEmailLogin(email) {
+//     const response = await fetch(`https://advogadodigital.onrender.com/login/${email}`);
+//     const data = await response.json();
+//     return data.existe;
+// }
+
+async function cadastroLogin() {
+    // Evitar o comportamento padrão do formulário
+    event.preventDefault();
+
+    const tenantInfoString = localStorage.getItem("tenantInfo");
+
+    const tenantInfo = JSON.parse(tenantInfoString);
+    // Obter valores dos campos do formulário
+    const id_tenant = tenantInfo.id.id_tenant
+    // const escritorio = document.getElementById('escritorio').value;
+    const nome = document.getElementById('nome').value;
+    const email = document.getElementById('email').value;
+    const senha = document.getElementById('senha').value;
+
+    // Verificar se o e-mail já existe
+    // const emailExistente = await verificarEmailLogin(email);
+
+    // if (emailExistente) {
+    //     alert('Já existe um cadastro para este e-mail. Por favor, use um e-mail diferente ou entre em contato (12)99732-9778');
+    //     return;
+    // }
+
+    // Criar objeto JSON com os dados do formulário
+    const data = {
+        id_tenant,
+        nome,
+        email,
+        senha
+    };
+
+    console.log(data);
+
+    // Enviar dados para o backend usando fetch
+    fetch('https://advogadodigital.onrender.com/login', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(data),
+    })
+    // .then(response => response.json())
+    .then(data => {
+        console.log('Success:', data);
+        alert('Cadastro realizado com sucesso.');
+        window.location.href = 'login.html'
+        // Lógica adicional após o sucesso, se necessário
+    })
+    .catch((error) => {
+        console.log('Error:', error);
+        alert('Erro no cadastro, contate o suporte. (12)99732-9778');
+        // Lógica de tratamento de erro, se necessário
+    });
+}
 
 // Adicionar um ouvinte de evento para a submissão do formulário
 async function realizarLogin(event) {
-  console.log('Início da função realizarLogin');
-
   event.preventDefault(); // Impedir o envio padrão do formulário
 
   const email = document.getElementById('email').value;
@@ -111,14 +171,19 @@ async function realizarLogin(event) {
 }
 
 
-document.addEventListener('DOMContentLoaded', function () {
-    const loginForm = document.querySelector('form');
+// document.addEventListener('DOMContentLoaded', function () {
+//     const loginForm = document.getElementById('form123');
     
-    loginForm.addEventListener('submit', function (event) {
-        event.preventDefault(); // Impedir o envio padrão do formulário
-        realizarLogin(event);
-    });
-});
+//     loginForm.addEventListener('submit', function (event) {
+//         event.preventDefault(); // Impedir o envio padrão do formulário
+//         realizarLogin(event);
+//     });
+// });
+
+
+// FIM LOGIN
+
+// CLIENTES
 
 async function verificarCPFExistente(CPF) {
     const response = await fetch(`https://advogadodigital.onrender.com/clientes/${CPF}`);
@@ -179,7 +244,8 @@ async function enviarCadastroCliente() {
 // Função para buscar clientes no backend
 async function buscarClientes() { 
     try {
-        const resposta = await fetch('https://advogadodigital.onrender.com/clientes');
+        const tenant = userInfo.tenant;
+        const resposta = await fetch(`https://advogadodigital.onrender.com/clientes/${tenant}`);
         const clientes = await resposta.json();
         return clientes;
     } catch (error) {

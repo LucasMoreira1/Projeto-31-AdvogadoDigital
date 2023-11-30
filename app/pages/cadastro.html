@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Advogado Digital - Login</title>
+    <title>Advogado Digital - Cadastro</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
     <style>@import url('https://fonts.googleapis.com/css2?family=Sorts+Mill+Goudy&display=swap');</style>
@@ -56,14 +56,17 @@
                 
                 <img src="/src/imgs/logo-no-background.png" id="logo-light" class="h-20 dark:hidden" alt="" srcset="">
                 <img src="/src/imgs/logo-no-background-dark.png" id="logo-dark" class="h-20 hidden" alt="" srcset="">
-                <h2 class="font-semibold text-lg mt-8 text-center mb-8">LOGIN</h2>
-                <form action="" class="flex flex-col gap-4 group" novalidate>
-                    <input type="email" id="email" class="peer text-gray-900 dark:text-white p-2 rounded-xl bg-gray-100 dark:bg-gray-900 invalid:[&:not(:placeholder-shown):not(:focus)] transition-colors duration-500" placeholder="Insira seu e-mail" required pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$">
+                <h2 class="font-semibold text-lg mt-8 text-center mb-8">Cadastre-se</h2>
+                <form id="formCadastroLogin" class="flex flex-col gap-4 group" onsubmit="cadastroLogin()" novalidate>
+                    <!-- <h3 id="id_tenant" class="hidden"></h3> -->
+                    <input readonly type="text" id="escritorio" class="peer text-gray-900 dark:text-white p-2 rounded-xl bg-gray-100 dark:bg-gray-800 invalid:[&:not(:placeholder-shown):not(:focus)] transition-colors duration-500" placeholder="Nome do escritorio">
+                    <input type="text" id="nome" class="peer text-gray-900 dark:text-white p-2 rounded-xl bg-gray-100 dark:bg-gray-900 invalid:[&:not(:placeholder-shown):not(:focus)] transition-colors duration-500" placeholder="Seu nome">
+                    <input type="email" id="email" class="peer text-gray-900 dark:text-white p-2 rounded-xl bg-gray-100 dark:bg-gray-900 invalid:[&:not(:placeholder-shown):not(:focus)] transition-colors duration-500" placeholder="Seu e-mail" required pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$">
                     <span class="hidden text-sm text-red-500 peer-[&:not(:placeholder-shown):not(:focus):invalid]:block">
                         Por favor, insira um e-mail válido.
                       </span>
                     <div class="relative">
-                        <input type="password" id="password" class="peer text-gray-900 dark:text-white p-2 rounded-xl w-full bg-gray-100 dark:bg-gray-900 invalid:[&:not(:placeholder-shown):not(:focus)] transition-colors duration-500" placeholder="Insira sua senha" required pattern=".{6,}">
+                        <input type="password" id="senha" class="peer text-gray-900 dark:text-white p-2 rounded-xl w-full bg-gray-100 dark:bg-gray-900 invalid:[&:not(:placeholder-shown):not(:focus)] transition-colors duration-500" placeholder="Insira sua senha" required pattern=".{6,}">
                         <svg id="PasswordIconHide" onclick="showPassword();" class="w-6 h-6 absolute top-5 right-3 -translate-y-1/2 cursor-pointer" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
                             <path stroke-linecap="round" stroke-linejoin="round" d="M3.98 8.223A10.477 10.477 0 001.934 12C3.226 16.338 7.244 19.5 12 19.5c.993 0 1.953-.138 2.863-.395M6.228 6.228A10.45 10.45 0 0112 4.5c4.756 0 8.773 3.162 10.065 7.498a10.523 10.523 0 01-4.293 5.774M6.228 6.228L3 3m3.228 3.228l3.65 3.65m7.894 7.894L21 21m-3.228-3.228l-3.65-3.65m0 0a3 3 0 10-4.243-4.243m4.242 4.242L9.88 9.88" />
                         </svg> 
@@ -76,23 +79,31 @@
                             A senha necessita no mínimo 6 caracteres
                           </span>
                     </div>
-                    
-                    <button class="bg-gray-400 dark:bg-gray-800 rounded-xl py-2 hover:scale-105 duration-300 group-invalid:pointer-events-none group-invalid:opacity-30" type="submit" >Acessar</button>
-                </form>
+                    <div class="relative">
+                        <input type="password" id="confirmaSenha" class="peer text-gray-900 dark:text-white p-2 rounded-xl w-full bg-gray-100 dark:bg-gray-900 invalid:[&:not(:placeholder-shown):not(:focus)] transition-colors duration-500" placeholder="Confirme sua senha" required pattern=".{6,}">
+                        <svg id="ConfirmPasswordIconHide" onclick="showPassword();" class="w-6 h-6 absolute top-5 right-3 -translate-y-1/2 cursor-pointer" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M3.98 8.223A10.477 10.477 0 001.934 12C3.226 16.338 7.244 19.5 12 19.5c.993 0 1.953-.138 2.863-.395M6.228 6.228A10.45 10.45 0 0112 4.5c4.756 0 8.773 3.162 10.065 7.498a10.523 10.523 0 01-4.293 5.774M6.228 6.228L3 3m3.228 3.228l3.65 3.65m7.894 7.894L21 21m-3.228-3.228l-3.65-3.65m0 0a3 3 0 10-4.243-4.243m4.242 4.242L9.88 9.88" />
+                        </svg> 
 
-                <div class="mt-10 grid grid-cols-3 items-center text-gray-500 transition-colors duration-500">
+                        <svg id="ConfirmPasswordIconShow" onclick="showPassword();" class="w-6 h-6 absolute top-5 right-3 -translate-y-1/2 cursor-pointer" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M2.036 12.322a1.012 1.012 0 010-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178z" />
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                        </svg>
+                        <span class="mt-2 hidden text-sm text-red-500 peer-[&:not(:placeholder-shown):not(:focus):invalid]:block">
+                            A senha necessita no mínimo 6 caracteres
+                          </span>
+                    </div>
+                    <button class="mt-2 bg-gray-400 dark:bg-gray-800 rounded-xl py-2 hover:scale-105 duration-300 group-invalid:pointer-events-none group-invalid:opacity-30" type="submit">Cadastrar</button>
+                    
+                </form>
+                <div class="mt-4 grid grid-cols-3 items-center text-gray-500 transition-colors duration-500">
                     <hr class="border-gray-500">
                     <p class="text-center text-sm">ou</p>
                     <hr class="border-gray-500">
-                </div>
-
-                <div class="mt-5 py-4 flex justify-center">
-                    <button class="bg-gray-400 dark:bg-gray-800 rounded-xl py-2 px-8 hover:scale-105 transition-colors duration-500">Esqueceu a senha?</button>
-                </div>
-                <div class="mt-3 flex justify-between items-center ">
-                    <p>Novo por aqui?</p>
-                    <a href="cadastro.html">
-                        <button class="bg-gray-400 dark:bg-gray-800 rounded-xl py-2 px-4 hover:scale-105 transition-colors duration-500">Cadastre-se</button>
+                </div>    
+                <div class="py-4 flex justify-center">
+                    <a href="login.html">
+                        <button class="bg-gray-400 dark:bg-gray-800 rounded-xl py-2 px-8 hover:scale-105 transition-colors duration-500">Login</button>
                     </a>
                 </div>
             </div>
@@ -101,5 +112,21 @@
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/flowbite/1.8.1/flowbite.min.js"></script>
     <script src="script.js"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            // Obter informações do Tenant do localStorage
+            const tenantInfoString = localStorage.getItem("tenantInfo");
+        
+            if (tenantInfoString) {
+                // Converter a string JSON para objeto JavaScript
+                const tenantInfo = JSON.parse(tenantInfoString);
+                // Preencher o campo Nome Escritório no formulário
+                document.getElementById("escritorio").value = tenantInfo.nome;
+                document.getElementById("nome").value = tenantInfo.responsavel;
+                // document.getElementById("id_tenant").innerText = tenantInfo.id.id_tenant;
+                
+            }
+        });
+    </script>
 </body>
 </html>
