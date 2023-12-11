@@ -57,7 +57,7 @@
                 <img src="/src/imgs/logo-no-background.png" id="logo-light" class="h-20 dark:hidden" alt="" srcset="">
                 <img src="/src/imgs/logo-no-background-dark.png" id="logo-dark" class="h-20 hidden" alt="" srcset="">
                 <h2 class="font-semibold text-lg mt-8 text-center mb-8">LOGIN</h2>
-                <form action="" class="flex flex-col gap-4 group" novalidate>
+                <form onsubmit="realizarLogin(event)" action="" class="flex flex-col gap-4 group" novalidate>
                     <input type="email" id="email" class="peer text-gray-900 dark:text-white p-2 rounded-xl bg-gray-100 dark:bg-gray-900 invalid:[&:not(:placeholder-shown):not(:focus)] transition-colors duration-500" placeholder="Insira seu e-mail" required pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$">
                     <span class="hidden text-sm text-red-500 peer-[&:not(:placeholder-shown):not(:focus):invalid]:block">
                         Por favor, insira um e-mail válido.
@@ -77,7 +77,7 @@
                           </span>
                     </div>
                     
-                    <button class="bg-gray-400 dark:bg-gray-800 rounded-xl py-2 hover:scale-105 duration-300 group-invalid:pointer-events-none group-invalid:opacity-30" type="submit" >Acessar</button>
+                    <button class="bg-gray-400 dark:bg-gray-800 rounded-xl py-2 hover:scale-105 duration-300 group-invalid:pointer-events-none group-invalid:opacity-30" type="submit">Acessar</button>
                 </form>
 
                 <div class="mt-10 grid grid-cols-3 items-center text-gray-500 transition-colors duration-500">

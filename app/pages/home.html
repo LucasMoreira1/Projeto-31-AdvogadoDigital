@@ -19,10 +19,11 @@
                     <path clip-rule="evenodd" fill-rule="evenodd" d="M2 4.75A.75.75 0 012.75 4h14.5a.75.75 0 010 1.5H2.75A.75.75 0 012 4.75zm0 10.5a.75.75 0 01.75-.75h7.5a.75.75 0 010 1.5h-7.5a.75.75 0 01-.75-.75zM2 10a.75.75 0 01.75-.75h14.5a.75.75 0 010 1.5H2.75A.75.75 0 012 10z"></path>
                 </svg>
             </button>
-            <div class="flex ml-2 md:mr-24">
+            <div class="">
                 <a href="#">
                     <img src="/src/imgs/logo-no-background-dark.png" class="h-20" alt="Advogado Digital" />
                 </a>
+                <h2 class="text-center dark:text-white hidden">Lucas Advocacia</h2>
             </div>
             <div class="flex items-center">
                 <div class="flex items-center ml-3">
@@ -57,13 +58,21 @@
     </nav>
 
  <!-- drawer component -->
- <div id="drawer-navigation" class="fixed top-0 left-0 z-40 w-64 h-screen p-4 pt-20 overflow-y-auto transition-transform -translate-x-full bg-white dark:bg-gray-800" tabindex="-1" aria-labelledby="drawer-navigation-label">
+ <div id="drawer-navigation" class="fixed top-0 left-0 z-40 w-64 h-screen p-4 pt-28 overflow-y-auto transition-transform -translate-x-full bg-white dark:bg-gray-800" tabindex="-1" aria-labelledby="drawer-navigation-label">
      <h5 id="drawer-navigation-label" class="text-base font-semibold text-gray-500 uppercase dark:text-gray-400">Menu</h5>
      <button type="button" data-drawer-hide="drawer-navigation" aria-controls="drawer-navigation" class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm p-1.5 absolute top-2.5 right-2.5 inline-flex items-center dark:hover:bg-gray-600 dark:hover:text-white" >
          
      </button>
    <div class="py-4 overflow-y-auto">
        <ul class="space-y-2 font-medium">
+        <li>
+            <a href="#" id="processosBtn" class="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M20.25 14.15v4.25c0 1.094-.787 2.036-1.872 2.18-2.087.277-4.216.42-6.378.42s-4.291-.143-6.378-.42c-1.085-.144-1.872-1.086-1.872-2.18v-4.25m16.5 0a2.18 2.18 0 00.75-1.661V8.706c0-1.081-.768-2.015-1.837-2.175a48.114 48.114 0 00-3.413-.387m4.5 8.006c-.194.165-.42.295-.673.38A23.978 23.978 0 0112 15.75c-2.648 0-5.195-.429-7.577-1.22a2.016 2.016 0 01-.673-.38m0 0A2.18 2.18 0 013 12.489V8.706c0-1.081.768-2.015 1.837-2.175a48.111 48.111 0 013.413-.387m7.5 0V5.25A2.25 2.25 0 0013.5 3h-3a2.25 2.25 0 00-2.25 2.25v.894m7.5 0a48.667 48.667 0 00-7.5 0M12 12.75h.008v.008H12v-.008z" />
+                </svg>                  
+               <span class="ml-3">Processos</span>
+            </a>
+        </li>
         <li>
             <a href="#" id="clientesBtn" class="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group">
                <svg class="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 18">
@@ -163,7 +172,7 @@
 <div class="mt-24 p-2 pt-4">
     <div class="border-gray-200 border-dashed rounded-lg dark:border-gray-700">
         <div class="content">
-        
+            
         </div>
     </div>
 </div>
@@ -176,13 +185,14 @@
     <script>
         // Verifique se o usuário está autenticado
         const userInfo = JSON.parse(localStorage.getItem('userInfo'));
+        // const tenantInfo = JSON.parse(localStorage.getItem('tenantInfo'));
     
         if (!userInfo) {
         // Redirecione o usuário para a página de login se não estiver autenticado
         window.location.href = '../../index.html';
         } else {
         // O usuário está autenticado, você pode acessar as informações do usuário
-        const tenant = userInfo.tenant;
+        const tenant = userInfo.nometenant;
         const nome = userInfo.nome;
         const email = userInfo.email;
     
