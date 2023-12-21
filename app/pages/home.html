@@ -23,7 +23,6 @@
                 <a href="#">
                     <img src="/src/imgs/logo-no-background-dark.png" class="h-20" alt="Advogado Digital" />
                 </a>
-                <h2 class="text-center dark:text-white hidden">Lucas Advocacia</h2>
             </div>
             <div class="flex items-center">
                 <div class="flex items-center ml-3">
@@ -71,14 +70,6 @@
                     <path stroke-linecap="round" stroke-linejoin="round" d="M20.25 14.15v4.25c0 1.094-.787 2.036-1.872 2.18-2.087.277-4.216.42-6.378.42s-4.291-.143-6.378-.42c-1.085-.144-1.872-1.086-1.872-2.18v-4.25m16.5 0a2.18 2.18 0 00.75-1.661V8.706c0-1.081-.768-2.015-1.837-2.175a48.114 48.114 0 00-3.413-.387m4.5 8.006c-.194.165-.42.295-.673.38A23.978 23.978 0 0112 15.75c-2.648 0-5.195-.429-7.577-1.22a2.016 2.016 0 01-.673-.38m0 0A2.18 2.18 0 013 12.489V8.706c0-1.081.768-2.015 1.837-2.175a48.111 48.111 0 013.413-.387m7.5 0V5.25A2.25 2.25 0 0013.5 3h-3a2.25 2.25 0 00-2.25 2.25v.894m7.5 0a48.667 48.667 0 00-7.5 0M12 12.75h.008v.008H12v-.008z" />
                 </svg>                  
                <span class="ml-3">Processos</span>
-            </a>
-        </li>
-        <li>
-            <a href="#" id="clientesBtn" class="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group">
-                <svg class="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 18">
-                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 3a3 3 0 1 1-1.614 5.53M15 12a4 4 0 0 1 4 4v1h-3.348M10 4.5a3.5 3.5 0 1 1-7 0 3.5 3.5 0 0 1 7 0ZM5 11h3a4 4 0 0 1 4 4v2H1v-2a4 4 0 0 1 4-4Z"/>
-                </svg>
-                <span class="ml-3">Processos</span>
             </a>
         </li>
         <li>
@@ -180,7 +171,7 @@
 <div class="mt-24 p-2 pt-4">
     <div class="border-gray-200 border-dashed rounded-lg dark:border-gray-700">
         <div class="content">
-            
+            <h2 id="bemVindo" class="text-white text-center"></h2>
         </div>
     </div>
 </div>
@@ -209,6 +200,7 @@
         document.title = `Advogado Digital | ${tenant}`;
         document.getElementById('menu-nome').innerText = `${nome}`;
         document.getElementById('menu-email').innerText = `${email}`;
+        document.getElementById('bemVindo').innerText = `Bem vindo novamente ${nome}.`;
         }
 
         // Adicione um ouvinte de evento para o botão de logout
@@ -222,6 +214,7 @@
 
         const contentArea = document.querySelector(".content");
         const clientesBtn = document.querySelector("#clientesBtn");
+        const processosBtn = document.querySelector("#processosBtn");
         const documentosBtn = document.querySelector("#documentosBtn");
         const agendaBtn = document.querySelector("#agendaBtn");
         const financeiroBtn = document.querySelector("#financeiroBtn");
@@ -230,6 +223,18 @@
 
 
         // Adicionar eventos aos botões
+        processosBtn.addEventListener("click", () => {
+            // Carregar o template da página
+            fetch("/app/pages/processos.html")
+                .then(response => response.text())
+                .then(data => {
+                    // Mostrar o conteúdo do template na home
+                    contentArea.innerHTML = data;
+
+                    // Iniciar componentes do Flowbite
+                    initFlowbite();
+                });
+        });
         clientesBtn.addEventListener("click", () => {
             // Carregar o template da página
             fetch("/app/pages/clientes.html")
@@ -244,9 +249,57 @@
                     pesquisaCliente();
                 });
         });
+        documentosBtn.addEventListener("click", () => {
+            // Carregar o template da página
+            fetch("/app/pages/documentos.html")
+                .then(response => response.text())
+                .then(data => {
+                    // Mostrar o conteúdo do template na home
+                    contentArea.innerHTML = data;
+
+                    // Iniciar componentes do Flowbite
+                    initFlowbite();
+                });
+        });
         agendaBtn.addEventListener("click", () => {
             // Carregar o template da página
             fetch("/app/pages/agenda.html")
+                .then(response => response.text())
+                .then(data => {
+                    // Mostrar o conteúdo do template na home
+                    contentArea.innerHTML = data;
+
+                    // Iniciar componentes do Flowbite
+                    initFlowbite();
+                });
+        });
+        financeiroBtn.addEventListener("click", () => {
+            // Carregar o template da página
+            fetch("/app/pages/financeiro.html")
+                .then(response => response.text())
+                .then(data => {
+                    // Mostrar o conteúdo do template na home
+                    contentArea.innerHTML = data;
+
+                    // Iniciar componentes do Flowbite
+                    initFlowbite();
+                });
+        });
+        suporteBtn.addEventListener("click", () => {
+            // Carregar o template da página
+            fetch("/app/pages/suporte.html")
+                .then(response => response.text())
+                .then(data => {
+                    // Mostrar o conteúdo do template na home
+                    contentArea.innerHTML = data;
+
+                    // Iniciar componentes do Flowbite
+                    initFlowbite();
+                });
+        });
+        duvidasBtn.addEventListener("click", () => {
+            // Carregar o template da página
+            fetch("/app/pages/duvidas.html")
                 .then(response => response.text())
                 .then(data => {
                     // Mostrar o conteúdo do template na home

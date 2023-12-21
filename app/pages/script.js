@@ -42,7 +42,7 @@ function darkModeToggle(){
 //
 
 function showPassword(){
-    var password = document.getElementById("senha");
+    var password = document.getElementById("password");
     var passwordIcon = document.getElementById("PasswordIconHide")
     var ConfirmPassword = document.getElementById("confirmaSenha");
     var ConfirmPasswordIcon = document.getElementById("ConfirmPasswordIconHide")
