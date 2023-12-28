@@ -83,7 +83,7 @@ async function cadastroLogin() {
     // const escritorio = document.getElementById('escritorio').value;
     const nome = document.getElementById('nome').value;
     const email = document.getElementById('email').value;
-    const senha = document.getElementById('senha').value;
+    const senha = document.getElementById('password').value;
 
     // Verificar se o e-mail já existe
     // const emailExistente = await verificarEmailLogin(email);
@@ -199,7 +199,7 @@ async function enviarCadastroCliente() {
     const userInfo = JSON.parse(localStorage.getItem('userInfo'));
     
     // Obter valores dos campos do formulário
-    const tenant = userInfo.tenant;
+    const tenant = userInfo.id_tenant;
     const nome = document.getElementById('nome').value;
     const cpf = document.getElementById('cpf').value;
     const estadocivil = document.getElementById('estadocivil').value;
@@ -219,6 +219,8 @@ async function enviarCadastroCliente() {
         cpf: cpf,
         estadocivil: estadocivil
     };
+
+    console.log(data);
 
     // Enviar dados para o backend usando fetch
     fetch('https://advogadodigital.onrender.com/clientes', {
@@ -244,7 +246,7 @@ async function enviarCadastroCliente() {
 // Função para buscar clientes no backend
 async function buscarClientes() { 
     try {
-        const tenant = userInfo.tenant;
+        const tenant = userInfo.id_tenant;
         const resposta = await fetch(`https://advogadodigital.onrender.com/clientes/${tenant}`);
         const clientes = await resposta.json();
         return clientes;
@@ -295,6 +297,11 @@ async function renderizarTabela() {
             linkEditar.href = '#';
             linkEditar.classList.add('ml-4', 'font-medium', 'text-blue-600', 'dark:text-blue-500', 'hover:underline');
             linkEditar.textContent = 'Editar';
+
+            // Adicionar os atributos data-modal-target e data-modal-toggle
+            linkEditar.setAttribute('data-modal-target', 'crud-modal');
+            linkEditar.setAttribute('data-modal-toggle', 'crud-modal');
+
             tdAcao.appendChild(linkEditar);
             tr.appendChild(tdAcao);
 
