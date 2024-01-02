@@ -293,14 +293,15 @@ async function renderizarTabela() {
 
             // Adicionar ação (Editar)
             const tdAcao = document.createElement('td');
-            const linkEditar = document.createElement('a');
-            linkEditar.href = '#';
+            const linkEditar = document.createElement('button');
+            // Adicionar os atributos data-modal-target e data-modal-toggle
+            linkEditar.setAttribute('data-modal-target', 'update-modal');
+            linkEditar.setAttribute('data-modal-toggle', 'update-modal');
+
+            linkEditar.type = 'button'
+            // linkEditar.href = '#';
             linkEditar.classList.add('ml-4', 'font-medium', 'text-blue-600', 'dark:text-blue-500', 'hover:underline');
             linkEditar.textContent = 'Editar';
-
-            // Adicionar os atributos data-modal-target e data-modal-toggle
-            linkEditar.setAttribute('data-modal-target', 'crud-modal');
-            linkEditar.setAttribute('data-modal-toggle', 'crud-modal');
 
             tdAcao.appendChild(linkEditar);
             tr.appendChild(tdAcao);
@@ -310,6 +311,7 @@ async function renderizarTabela() {
     } catch (error) {
         console.error('Erro ao renderizar tabela:', error);
     }
+    initFlowbite();
 }
 
 async function pesquisaCliente(){
