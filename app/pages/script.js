@@ -65,12 +65,6 @@ function showPassword(){
 // Login
 //
 
-// async function verificarEmailLogin(email) {
-//     const response = await fetch(`https://advogadodigital.onrender.com/login/${email}`);
-//     const data = await response.json();
-//     return data.existe;
-// }
-
 async function cadastroLogin() {
     // Evitar o comportamento padrão do formulário
     event.preventDefault();
@@ -170,21 +164,11 @@ async function realizarLogin(event) {
   console.log('Fim da função realizarLogin');
 }
 
-
-// document.addEventListener('DOMContentLoaded', function () {
-//     const loginForm = document.getElementById('form123');
-    
-//     loginForm.addEventListener('submit', function (event) {
-//         event.preventDefault(); // Impedir o envio padrão do formulário
-//         realizarLogin(event);
-//     });
-// });
-
-
 // FIM LOGIN
 
 // CLIENTES
 
+// CREATE
 async function verificarCPFExistente(CPF) {
     const response = await fetch(`https://advogadodigital.onrender.com/clientes/${CPF}`);
     const data = await response.json();
@@ -243,6 +227,8 @@ async function enviarCadastroCliente() {
     });
 }
 
+// READ 
+
 // Função para buscar clientes no backend
 async function buscarClientes() { 
     try {
@@ -297,11 +283,17 @@ async function renderizarTabela() {
             // Adicionar os atributos data-modal-target e data-modal-toggle
             linkEditar.setAttribute('data-modal-target', 'update-modal');
             linkEditar.setAttribute('data-modal-toggle', 'update-modal');
+            linkEditar.setAttribute('onclick', 'preencherFormularioAtualizacao(parentNode.parentNode)');
+
 
             linkEditar.type = 'button'
             // linkEditar.href = '#';
             linkEditar.classList.add('ml-4', 'font-medium', 'text-blue-600', 'dark:text-blue-500', 'hover:underline');
             linkEditar.textContent = 'Editar';
+
+            // Adicionar EventListener para capturar o clique e chamar a função de preenchimento do formulário
+            //linkEditar.addEventListener('click', () => preencherFormularioAtualizacao(cliente));
+            
 
             tdAcao.appendChild(linkEditar);
             tr.appendChild(tdAcao);
@@ -340,4 +332,68 @@ async function pesquisaCliente(){
     inputPesquisa.addEventListener('input', filtrarTabela);
 }
 
+// UPDATE
+function preencherFormularioAtualizacao(tr) {
+    // Preencher os campos do formulário no modal com os dados do cliente
+    
+    const id_cliente = tr.children[1].innerText;
+    const nome = tr.children[2].innerText; // Índice 2 para a coluna de nome
+    const cpf = tr.children[3].innerText; // Índice 3 para a coluna de CPF
+    const estadocivil = tr.children[4].innerText; // Índice 4 para a coluna de Estado Civil
+    
+    document.getElementById('update-nome').value = nome;
+    document.getElementById('update-cpf').value = cpf;
+    document.getElementById('update-estadocivil').value = estadocivil;
+
+    // Abrir o modal de atualização
+    const updateModal = document.getElementById('update-modal');
+    updateModal.classList.remove('hidden');
+    updateCadastroCliente(id_cliente)
+}
+
+async function updateCadastroCliente(id_cliente) {
+    // Evitar o comportamento padrão do formulário
+    event.preventDefault();
+
+    const userInfo = JSON.parse(localStorage.getItem('userInfo'));
+    
+    // Obter valores dos campos do formulário
+    const tenant = userInfo.id_tenant;
+    const cliente = id_cliente;
+    console.log(cliente)
+    const nome = document.getElementById('update-nome').value;
+    const cpf = document.getElementById('update-cpf').value;
+    const estadocivil = document.getElementById('update-estadocivil').value;
+
+    // Criar objeto JSON com os dados do formulário
+    const data = {
+        tenant: tenant,
+        id_cliente: cliente,
+        nome: nome,
+        cpf: cpf,
+        estadocivil: estadocivil
+    };
+
+    console.log(data);
+
+    // Enviar dados para o backend usando fetch
+    fetch('https://advogadodigital.onrender.com/clientes', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(data),
+    })
+    .then(response => response.json())
+    .then(data => {
+        console.log('Success:', data);
+        alert('Dados do cliente atualizados com sucesso.');
+        // Lógica adicional após o sucesso, se necessário
+    })
+    .catch((error) => {
+        console.log('Error:', error);
+        alert('Erro no atualizar, contate o suporte.');
+        // Lógica de tratamento de erro, se necessário
+    });
+}
 
