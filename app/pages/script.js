@@ -188,14 +188,6 @@ async function enviarCadastroCliente() {
     const cpf = document.getElementById('cpf').value;
     const estadocivil = document.getElementById('estadocivil').value;
 
-    // Verificar se o e-mail já existe
-    // const cpfExistente = await verificarCPFExistente(CPF);
-
-    // if (cpfExistente) {
-    //     alert('Já existe um cliente para este CPF. Por favor, verifique.');
-    //     return;
-    // }
-
     // Criar objeto JSON com os dados do formulário
     const data = {
         tenant: tenant,
@@ -215,6 +207,7 @@ async function enviarCadastroCliente() {
         body: JSON.stringify(data),
     })
     .then(response => response.json())
+    console.log(response)
     .then(data => {
         console.log('Success:', data);
         alert('Cliente registrado com sucesso.');
@@ -257,13 +250,13 @@ async function renderizarTabela() {
             const tr = document.createElement('tr');
             tr.classList.add('bg-white', 'border-b', 'dark:bg-gray-800', 'dark:border-gray-700', 'hover:bg-gray-50', 'dark:hover:bg-gray-600');
 
-            // Adicionar checkbox
-            const tdCheckbox = document.createElement('td');
-            const checkbox = document.createElement('input');
-            checkbox.type = 'checkbox';
-            checkbox.classList.add('ml-3.5', 'w-4', 'h-4', 'text-blue-600', 'bg-gray-100', 'border-gray-300', 'rounded', 'focus:ring-blue-500', 'dark:focus:ring-blue-600', 'dark:ring-offset-gray-800', 'dark:focus:ring-offset-gray-800', 'focus:ring-2', 'dark:bg-gray-700', 'dark:border-gray-600');
-            tdCheckbox.appendChild(checkbox);
-            tr.appendChild(tdCheckbox);
+            //// Adicionar checkbox
+            // const tdCheckbox = document.createElement('td');
+            // const checkbox = document.createElement('input');
+            // checkbox.type = 'checkbox';
+            // checkbox.classList.add('ml-3.5', 'w-4', 'h-4', 'text-blue-600', 'bg-gray-100', 'border-gray-300', 'rounded', 'focus:ring-blue-500', 'dark:focus:ring-blue-600', 'dark:ring-offset-gray-800', 'dark:focus:ring-offset-gray-800', 'focus:ring-2', 'dark:bg-gray-700', 'dark:border-gray-600');
+            // tdCheckbox.appendChild(checkbox);
+            // tr.appendChild(tdCheckbox);
 
             // Adicionar as células da linha
             Object.values(cliente).forEach((value) => {
@@ -278,25 +271,34 @@ async function renderizarTabela() {
             });
 
             // Adicionar ação (Editar)
-            const tdAcao = document.createElement('td');
+            const tdEditar = document.createElement('td');
             const linkEditar = document.createElement('button');
             // Adicionar os atributos data-modal-target e data-modal-toggle
             linkEditar.setAttribute('data-modal-target', 'update-modal');
             linkEditar.setAttribute('data-modal-toggle', 'update-modal');
             linkEditar.setAttribute('onclick', 'preencherFormularioAtualizacao(parentNode.parentNode)');
-
-
             linkEditar.type = 'button'
             // linkEditar.href = '#';
             linkEditar.classList.add('ml-4', 'font-medium', 'text-blue-600', 'dark:text-blue-500', 'hover:underline');
             linkEditar.textContent = 'Editar';
 
-            // Adicionar EventListener para capturar o clique e chamar a função de preenchimento do formulário
-            //linkEditar.addEventListener('click', () => preencherFormularioAtualizacao(cliente));
-            
+            tdEditar.appendChild(linkEditar);
+            tr.appendChild(tdEditar);
 
-            tdAcao.appendChild(linkEditar);
-            tr.appendChild(tdAcao);
+            // Adicionar ação (Remover)
+            const tdRemover = document.createElement('td');
+            const linkRemover = document.createElement('button');
+            // Adicionar os atributos data-modal-target e data-modal-toggle
+            linkRemover.setAttribute('data-modal-target', 'update-modal');
+            linkRemover.setAttribute('data-modal-toggle', 'update-modal');
+            linkRemover.setAttribute('onclick', 'removerCliente(parentNode.parentNode)');
+            linkRemover.type = 'button'
+            // linkEditar.href = '#';
+            linkRemover.classList.add('ml-4', 'font-medium', 'text-blue-600', 'dark:text-blue-500', 'hover:underline');
+            linkRemover.textContent = 'Remover';
+
+            tdRemover.appendChild(linkRemover);
+            tr.appendChild(tdRemover);
 
             tbody.appendChild(tr);
         });
@@ -336,11 +338,12 @@ async function pesquisaCliente(){
 function preencherFormularioAtualizacao(tr) {
     // Preencher os campos do formulário no modal com os dados do cliente
     
-    const id_cliente = tr.children[1].innerText;
-    const nome = tr.children[2].innerText; // Índice 2 para a coluna de nome
-    const cpf = tr.children[3].innerText; // Índice 3 para a coluna de CPF
-    const estadocivil = tr.children[4].innerText; // Índice 4 para a coluna de Estado Civil
+    const id_cliente = tr.children[0].innerText;
+    const nome = tr.children[1].innerText; // Índice 2 para a coluna de nome
+    const cpf = tr.children[2].innerText; // Índice 3 para a coluna de CPF
+    const estadocivil = tr.children[3].innerText; // Índice 4 para a coluna de Estado Civil
     
+    document.getElementById('update-id-cliente').value = id_cliente;
     document.getElementById('update-nome').value = nome;
     document.getElementById('update-cpf').value = cpf;
     document.getElementById('update-estadocivil').value = estadocivil;
@@ -348,10 +351,9 @@ function preencherFormularioAtualizacao(tr) {
     // Abrir o modal de atualização
     const updateModal = document.getElementById('update-modal');
     updateModal.classList.remove('hidden');
-    updateCadastroCliente(id_cliente)
 }
 
-async function updateCadastroCliente(id_cliente) {
+async function updateCadastroCliente() {
     // Evitar o comportamento padrão do formulário
     event.preventDefault();
 
@@ -359,8 +361,7 @@ async function updateCadastroCliente(id_cliente) {
     
     // Obter valores dos campos do formulário
     const tenant = userInfo.id_tenant;
-    const cliente = id_cliente;
-    console.log(cliente)
+    const id_cliente = document.getElementById('update-id-cliente').value;
     const nome = document.getElementById('update-nome').value;
     const cpf = document.getElementById('update-cpf').value;
     const estadocivil = document.getElementById('update-estadocivil').value;
@@ -368,7 +369,6 @@ async function updateCadastroCliente(id_cliente) {
     // Criar objeto JSON com os dados do formulário
     const data = {
         tenant: tenant,
-        id_cliente: cliente,
         nome: nome,
         cpf: cpf,
         estadocivil: estadocivil
@@ -377,14 +377,14 @@ async function updateCadastroCliente(id_cliente) {
     console.log(data);
 
     // Enviar dados para o backend usando fetch
-    fetch('https://advogadodigital.onrender.com/clientes', {
-        method: 'POST',
+    fetch(`https://advogadodigital.onrender.com/clientes/${id_cliente}`, {
+        method: 'PUT',
         headers: {
             'Content-Type': 'application/json',
         },
         body: JSON.stringify(data),
     })
-    .then(response => response.json())
+    // .then(response => response.json())
     .then(data => {
         console.log('Success:', data);
         alert('Dados do cliente atualizados com sucesso.');
@@ -397,3 +397,42 @@ async function updateCadastroCliente(id_cliente) {
     });
 }
 
+// DELETE
+
+async function removerCliente(tr) {
+    // Evitar o comportamento padrão do formulário
+    event.preventDefault();
+
+    const userInfo = JSON.parse(localStorage.getItem('userInfo'));
+    
+    // Obter valores dos campos do formulário
+    const tenant = userInfo.id_tenant;
+    const id_cliente = tr.children[1].innerText;
+
+    // Criar objeto JSON com os dados do formulário
+    const data = {
+        tenant: tenant
+    };
+
+    console.log(data);
+
+    // Enviar dados para o backend usando fetch
+    fetch(`https://advogadodigital.onrender.com/clientes/${id_cliente}`, {
+        method: 'DELETE',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(data),
+    })
+    // .then(response => response.json())
+    .then(data => {
+        console.log('Success:', data);
+        alert('Dados do cliente deletados com sucesso.');
+        // Lógica adicional após o sucesso, se necessário
+    })
+    .catch((error) => {
+        console.log('Error:', error);
+        alert('Erro ao deletar, contate o suporte.');
+        // Lógica de tratamento de erro, se necessário
+    });
+}
