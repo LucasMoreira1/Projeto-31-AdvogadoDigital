@@ -288,9 +288,9 @@ async function renderizarTabela() {
             // Adicionar ação (Remover)
             const tdRemover = document.createElement('td');
             const linkRemover = document.createElement('button');
-            // Adicionar os atributos data-modal-target e data-modal-toggle
-            linkRemover.setAttribute('data-modal-target', 'update-modal');
-            linkRemover.setAttribute('data-modal-toggle', 'update-modal');
+            // // Adicionar os atributos data-modal-target e data-modal-toggle
+            // linkRemover.setAttribute('data-modal-target', 'update-modal');
+            // linkRemover.setAttribute('data-modal-toggle', 'update-modal');
             linkRemover.setAttribute('onclick', 'removerCliente(parentNode.parentNode)');
             linkRemover.type = 'button'
             // linkEditar.href = '#';
@@ -407,7 +407,7 @@ async function removerCliente(tr) {
     
     // Obter valores dos campos do formulário
     const tenant = userInfo.id_tenant;
-    const id_cliente = tr.children[1].innerText;
+    const id_cliente = tr.children[0].innerText;
 
     // Criar objeto JSON com os dados do formulário
     const data = {
