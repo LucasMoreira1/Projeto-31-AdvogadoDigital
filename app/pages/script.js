@@ -271,34 +271,129 @@ async function renderizarTabela() {
             });
 
             // Adicionar ação (Editar)
-            const tdEditar = document.createElement('td');
+            const tdAcao = document.createElement('td');
+            const containerBotoes = document.createElement('div');
             const linkEditar = document.createElement('button');
+
+            containerBotoes.classList.add('flex')
+
             // Adicionar os atributos data-modal-target e data-modal-toggle
             linkEditar.setAttribute('data-modal-target', 'update-modal');
             linkEditar.setAttribute('data-modal-toggle', 'update-modal');
-            linkEditar.setAttribute('onclick', 'preencherFormularioAtualizacao(parentNode.parentNode)');
-            linkEditar.type = 'button'
-            // linkEditar.href = '#';
-            linkEditar.classList.add('ml-4', 'font-medium', 'text-blue-600', 'dark:text-blue-500', 'hover:underline');
-            linkEditar.textContent = 'Editar';
+            linkEditar.setAttribute('onclick', 'preencherFormularioAtualizacao(parentNode.parentNode.parentNode)');
+            linkEditar.type = 'button';
 
-            tdEditar.appendChild(linkEditar);
-            tr.appendChild(tdEditar);
+            // Adicionar classes ao botão
+            linkEditar.classList.add(
+            'ml-3',
+            'block',
+            'text-black',
+            'bg-gray-600',
+            'hover:bg-gray-800',
+            'focus:ring-4',
+            'focus:outline-none',
+            'focus:ring-gray-900',
+            'font-medium',
+            'rounded-lg',
+            'text-sm',
+            'px-5',
+            'py-2.5',
+            'text-center',
+            'dark:bg-gray-400',
+            'dark:hover:bg-gray-500',
+            'dark:focus:ring-gray-600'
+            );
+
+            // Criar o elemento SVG
+            const svgEditar = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+            svgEditar.setAttribute('xmlns', 'http://www.w3.org/2000/svg');
+            svgEditar.setAttribute('fill', 'none');
+            svgEditar.setAttribute('viewBox', '0 0 24 24');
+            svgEditar.setAttribute('stroke-width', '1.5');
+            svgEditar.setAttribute('stroke', 'currentColor');
+            svgEditar.classList.add('w-6', 'h-6');
+
+            // Criar o caminho do ícone
+            const pathEditar = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+            pathEditar.setAttribute('stroke-linecap', 'round');
+            pathEditar.setAttribute('stroke-linejoin', 'round');
+            pathEditar.setAttribute('d', 'm16.862 4.487 1.687-1.688a1.875 1.875 0 1 1 2.652 2.652L10.582 16.07a4.5 4.5 0 0 1-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 0 1 1.13-1.897l8.932-8.931Zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0 1 15.75 21H5.25A2.25 2.25 0 0 1 3 18.75V8.25A2.25 2.25 0 0 1 5.25 6H10');
+
+            // Adicionar o caminho ao SVG
+            svgEditar.appendChild(pathEditar);
+
+            // Adicionar o SVG ao botão
+            linkEditar.appendChild(svgEditar);
+
+            // // Adicionar o botão ao TD
+            // tdEditar.appendChild(linkEditar);
+
+            // // Adicionar o TD à TR
+            // tr.appendChild(tdEditar);
+
 
             // Adicionar ação (Remover)
-            const tdRemover = document.createElement('td');
+            // const tdRemover = document.createElement('td');
             const linkRemover = document.createElement('button');
-            // // Adicionar os atributos data-modal-target e data-modal-toggle
+
+            // Adicionar os atributos data-modal-target e data-modal-toggle
             // linkRemover.setAttribute('data-modal-target', 'update-modal');
             // linkRemover.setAttribute('data-modal-toggle', 'update-modal');
             linkRemover.setAttribute('onclick', 'removerCliente(parentNode.parentNode)');
-            linkRemover.type = 'button'
-            // linkEditar.href = '#';
-            linkRemover.classList.add('ml-4', 'font-medium', 'text-blue-600', 'dark:text-blue-500', 'hover:underline');
-            linkRemover.textContent = 'Remover';
+            linkRemover.type = 'button';
 
-            tdRemover.appendChild(linkRemover);
-            tr.appendChild(tdRemover);
+            // Adicionar classes ao botão
+            linkRemover.classList.add(
+            'ml-3', 
+            'block',
+            'text-white',
+            'bg-red-700',
+            'hover:bg-red-800',
+            'focus:ring-4',
+            'focus:outline-none',
+            'focus:ring-red-300',
+            'font-medium',
+            'rounded-lg',
+            'text-sm',
+            'px-5',
+            'py-2.5',
+            'text-center',
+            'dark:bg-red-900',
+            'dark:hover:bg-red-700',
+            'dark:focus:ring-red-800'
+            );
+
+            // Criar o elemento SVG
+            const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+            svg.setAttribute('xmlns', 'http://www.w3.org/2000/svg');
+            svg.setAttribute('fill', 'none');
+            svg.setAttribute('viewBox', '0 0 24 24');
+            svg.setAttribute('stroke-width', '1.5');
+            svg.setAttribute('stroke', 'currentColor');
+            svg.classList.add('w-6', 'h-6');
+
+            // Criar o caminho do ícone
+            const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+            path.setAttribute('stroke-linecap', 'round');
+            path.setAttribute('stroke-linejoin', 'round');
+            path.setAttribute('d', 'M22 10.5h-6m-2.25-4.125a3.375 3.375 0 11-6.75 0 3.375 3.375 0 016.75 0zM4 19.235v-.11a6.375 6.375 0 0112.75 0v.109A12.318 12.318 0 0110.374 21c-2.331 0-4.512-.645-6.374-1.766');
+
+            // Adicionar o caminho ao SVG
+            svg.appendChild(path);
+
+            // Adicionar o SVG ao botão
+            linkRemover.appendChild(svg);
+
+            // // Adicionar o botão ao TD
+            // tdRemover.appendChild(linkRemover);
+
+            // // Adicionar o TD à TR
+            // tr.appendChild(tdRemover);
+            containerBotoes.appendChild(linkEditar);
+            containerBotoes.appendChild(linkRemover);
+
+            tdAcao.appendChild(containerBotoes);
+            tr.appendChild(tdAcao);
 
             tbody.appendChild(tr);
         });
@@ -429,6 +524,7 @@ async function removerCliente(tr) {
         console.log('Success:', data);
         alert('Dados do cliente deletados com sucesso.');
         // Lógica adicional após o sucesso, se necessário
+        renderizarTabela()
     })
     .catch((error) => {
         console.log('Error:', error);
@@ -436,3 +532,8 @@ async function removerCliente(tr) {
         // Lógica de tratamento de erro, se necessário
     });
 }
+
+// FIM CLIENTES
+
+// PROCESSOS
+
