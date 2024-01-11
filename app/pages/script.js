@@ -537,3 +537,122 @@ async function removerCliente(tr) {
 
 // PROCESSOS
 
+// DOCUMENTOS
+
+// CLIENTES
+
+async function renderizarTabelaClientesDocumentos() {
+    const tbody = document.querySelector('tbody');
+
+    try {
+        // Buscar clientes no backend
+        const clientes = await buscarClientesDocumentos();
+        // Limpar o conteúdo atual da tabela
+        tbody.innerHTML = '';
+
+        // Renderizar os novos dados na tabela
+        clientes.forEach((cliente) => {
+            const tr = document.createElement('tr');
+            tr.classList.add('bg-white', 'border-b', 'dark:bg-gray-800', 'dark:border-gray-700', 'hover:bg-gray-50', 'dark:hover:bg-gray-600');
+
+            // Adicionar as células da linha
+            Object.values(cliente).forEach((value) => {
+                const td = document.createElement('td');
+                td.classList.add('px-6', 'py-3');
+            
+                // Verificar se o valor é uma string antes de aplicar a formatação
+                const textoFormatado = typeof value === 'string' ? value.replace(/\b\w+/g, substr => substr.charAt(0).toUpperCase() + substr.slice(1).toLowerCase()).replace(/\b\w+(?=\))/g, substr => substr.toLowerCase()) : value;
+                td.textContent = textoFormatado;
+                td.setAttribute('onclick', 'preencherNomeClienteDocumentos(parentNode)');
+                tr.appendChild(td);
+
+            });
+        
+            tbody.appendChild(tr);
+        });
+    } catch (error) {
+        console.error('Erro ao renderizar tabela:', error);
+    }
+    initFlowbite();
+}
+
+async function buscarClientesDocumentos() { 
+    try {
+        const tenant = userInfo.id_tenant;
+        const resposta = await fetch(`https://advogadodigital.onrender.com/clientes/${tenant}`);
+        const clientes = await resposta.json();
+        return clientes;
+    } catch (error) {
+        console.error('Erro ao buscar clientes:', error);
+        throw error;
+    }
+}
+
+function preencherNomeClienteDocumentos(tr) {
+    // Preencher os campos do formulário no modal com os dados do cliente
+    
+    const nome = tr.children[1].innerText; // Índice 2 para a coluna de nome
+    
+    document.getElementById('nome-cliente').value = nome;
+    const closeModalCliente = document.getElementById('closeModalCliente');
+    closeModalCliente.click();
+}
+
+// REU
+
+async function renderizarTabelaReuDocumentos() {
+    const tbody = document.getElementById('tbody-reu');
+
+    try {
+        // Buscar reu no backend
+        const clientes = await buscarReuDocumentos();
+        // Limpar o conteúdo atual da tabela
+        tbody.innerHTML = '';
+
+        // Renderizar os novos dados na tabela
+        clientes.forEach((cliente) => {
+            const tr = document.createElement('tr');
+            tr.classList.add('bg-white', 'border-b', 'dark:bg-gray-800', 'dark:border-gray-700', 'hover:bg-gray-50', 'dark:hover:bg-gray-600');
+
+            // Adicionar as células da linha
+            Object.values(cliente).forEach((value) => {
+                const td = document.createElement('td');
+                td.classList.add('px-6', 'py-3');
+            
+                // Verificar se o valor é uma string antes de aplicar a formatação
+                const textoFormatado = typeof value === 'string' ? value.replace(/\b\w+/g, substr => substr.charAt(0).toUpperCase() + substr.slice(1).toLowerCase()).replace(/\b\w+(?=\))/g, substr => substr.toLowerCase()) : value;
+                td.textContent = textoFormatado;
+                td.setAttribute('onclick', 'preencherNomeReuDocumentos(parentNode)');
+                tr.appendChild(td);
+
+            });
+        
+            tbody.appendChild(tr);
+        });
+    } catch (error) {
+        console.error('Erro ao renderizar tabela:', error);
+    }
+    initFlowbite();
+}
+
+async function buscarReuDocumentos() { 
+    try {
+        const tenant = userInfo.id_tenant;
+        const resposta = await fetch(`https://advogadodigital.onrender.com/clientes/${tenant}`);
+        const clientes = await resposta.json();
+        return clientes;
+    } catch (error) {
+        console.error('Erro ao buscar clientes:', error);
+        throw error;
+    }
+}
+
+function preencherNomeReuDocumentos(tr) {
+    // Preencher os campos do formulário no modal com os dados do cliente
+    
+    const nome = tr.children[1].innerText; // Índice 2 para a coluna de nome
+    
+    document.getElementById('nome-reu').value = nome;
+    const closeModalReu = document.getElementById('closeModalReu');
+    closeModalReu.click();
+}
