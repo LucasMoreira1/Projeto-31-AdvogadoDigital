@@ -539,9 +539,55 @@ async function removerCliente(tr) {
 
 // DOCUMENTOS
 
+async function gerarDocumento() {
+    event.preventDefault();
+
+    const clienteNome = document.getElementById('nome-cliente').value;
+    const clienteCPF = document.getElementById('cpf-cliente').value;
+
+    console.log(clienteNome, clienteCPF)
+  
+    const response = await fetch('https://advogadodigital.onrender.com/gerar-docx', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ clienteNome, clienteCPF }),
+    });
+  
+    if (response.ok) {
+      const blob = await response.blob();
+  
+      // Crie um objeto de URL do Blob
+      const url = window.URL.createObjectURL(blob);
+  
+      // Crie um link temporário
+      const a = document.createElement('a');
+      a.href = url;
+  
+      // Defina o nome do arquivo para download
+      a.download = `${clienteNome}_Declaracao_Hipossuficiencia.docx`;
+  
+      // Anexe o link ao corpo do documento
+      document.body.appendChild(a);
+  
+      // Clique automaticamente no link
+      a.click();
+  
+      // Remova o link do corpo do documento
+      document.body.removeChild(a);
+  
+      // Revogue a URL do objeto Blob para liberar recursos
+      window.URL.revokeObjectURL(url);
+    } else {
+      console.error('Erro ao gerar o documento:', response.statusText);
+    }
+}
+
 // CLIENTES
 
 async function renderizarTabelaClientesDocumentos() {
+    event.preventDefault();
     const tbody = document.querySelector('tbody');
 
     try {
@@ -591,9 +637,11 @@ async function buscarClientesDocumentos() {
 function preencherNomeClienteDocumentos(tr) {
     // Preencher os campos do formulário no modal com os dados do cliente
     
-    const nome = tr.children[1].innerText; // Índice 2 para a coluna de nome
-    
+    const nome = tr.children[1].innerText; 
+    const cpf = tr.children[2].innerText;
     document.getElementById('nome-cliente').value = nome;
+    document.getElementById('cpf-cliente').value = cpf
+    
     const closeModalCliente = document.getElementById('closeModalCliente');
     closeModalCliente.click();
 }
