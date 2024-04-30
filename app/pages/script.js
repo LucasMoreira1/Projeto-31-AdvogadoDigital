@@ -98,7 +98,7 @@ async function cadastroLogin() {
     console.log(data);
 
     // Enviar dados para o backend usando fetch
-    fetch('187.95.26.193/login', {
+    fetch('187.95.26.193:3333/login', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
@@ -130,7 +130,7 @@ async function realizarLogin(event) {
   console.log('Password:', senha);
 
   // Enviar uma solicitação para verificar as credenciais
-  const response = await fetch('187.95.26.193/login/validacao', {
+  const response = await fetch('187.95.26.193:3333/login/validacao', {
       method: 'POST',
       headers: {
           'Content-Type': 'application/json',
@@ -170,7 +170,7 @@ async function realizarLogin(event) {
 
 // CREATE
 async function verificarCPFExistente(CPF) {
-    const response = await fetch(`187.95.26.193/clientes/${CPF}`);
+    const response = await fetch(`187.95.26.193:3333/clientes/${CPF}`);
     const data = await response.json();
     return data.existe;
 }
@@ -199,7 +199,7 @@ async function enviarCadastroCliente() {
     console.log(data);
 
     // Enviar dados para o backend usando fetch
-    fetch('187.95.26.193/clientes', {
+    fetch('187.95.26.193:3333/clientes', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
@@ -226,7 +226,7 @@ async function enviarCadastroCliente() {
 async function buscarClientes() { 
     try {
         const tenant = userInfo.id_tenant;
-        const resposta = await fetch(`187.95.26.193/clientes/${tenant}`);
+        const resposta = await fetch(`187.95.26.193:3333/clientes/${tenant}`);
         const clientes = await resposta.json();
         return clientes;
     } catch (error) {
@@ -472,7 +472,7 @@ async function updateCadastroCliente() {
     console.log(data);
 
     // Enviar dados para o backend usando fetch
-    fetch(`187.95.26.193/clientes/${id_cliente}`, {
+    fetch(`187.95.26.193:3333/clientes/${id_cliente}`, {
         method: 'PUT',
         headers: {
             'Content-Type': 'application/json',
@@ -512,7 +512,7 @@ async function removerCliente(tr) {
     console.log(data);
 
     // Enviar dados para o backend usando fetch
-    fetch(`187.95.26.193/clientes/${id_cliente}`, {
+    fetch(`187.95.26.193:3333/clientes/${id_cliente}`, {
         method: 'DELETE',
         headers: {
             'Content-Type': 'application/json',
@@ -547,7 +547,7 @@ async function gerarDocumento() {
 
     console.log(clienteNome, clienteCPF)
   
-    const response = await fetch('187.95.26.193/gerar-docx', {
+    const response = await fetch('187.95.26.193:3333/gerar-docx', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -625,7 +625,7 @@ async function renderizarTabelaClientesDocumentos() {
 async function buscarClientesDocumentos() { 
     try {
         const tenant = userInfo.id_tenant;
-        const resposta = await fetch(`187.95.26.193/clientes/${tenant}`);
+        const resposta = await fetch(`187.95.26.193:3333/clientes/${tenant}`);
         const clientes = await resposta.json();
         return clientes;
     } catch (error) {
@@ -686,7 +686,7 @@ async function renderizarTabelaReuDocumentos() {
 async function buscarReuDocumentos() { 
     try {
         const tenant = userInfo.id_tenant;
-        const resposta = await fetch(`187.95.26.193/clientes/${tenant}`);
+        const resposta = await fetch(`187.95.26.193:3333/clientes/${tenant}`);
         const clientes = await resposta.json();
         return clientes;
     } catch (error) {
