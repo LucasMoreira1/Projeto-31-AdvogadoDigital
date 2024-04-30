@@ -122,7 +122,7 @@ async function enviarFormulario() {
 
         // Armazenar informações do Tenant, incluindo o ID, no localStorage
         const tenantInfo = {
-            id: data.novoTenantId,
+            id: data.novoTenantId.id_tenant,
             nome: escritorio,
             responsavel: responsavel,
             email: email,
