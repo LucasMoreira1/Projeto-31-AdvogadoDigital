@@ -70,7 +70,7 @@ acceptPrivacyEl.addEventListener('click', function() {
 // Criar Tenant (escritorio)
 
 async function verificarEmailTenant(email) {
-    const response = await fetch(`http://187.95.26.193:3333/tenant/${email}`);
+    const response = await fetch(`http://mysql-agility.advogadodigital.click:3333/tenant/${email}`);
     const data = await response.json();
     return data.existe;
 }
@@ -102,7 +102,7 @@ async function enviarFormulario() {
     };
 
     // Enviar dados para o backend usando fetch
-    fetch('http://187.95.26.193:3333/tenant', {
+    fetch('http://mysql-agility.advogadodigital.click:3333/tenant', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
