@@ -74,8 +74,11 @@ document.addEventListener('DOMContentLoaded', (event) => {
     const updateTelefoneInput = document.getElementById('update-telefone')
 
     cpfInput.addEventListener('input', formatCPF);
+    updateCpfInput.addEventListener('input', formatCPF);
     rgInput.addEventListener('input', formatRG);
+    updateRgInput.addEventListener('input', formatRG);
     telefoneInput.addEventListener('input', formatTelefone);
+    updateTelefoneInput.addEventListener('input', formatTelefone)
 });
 
 function formatCPF(event) {
