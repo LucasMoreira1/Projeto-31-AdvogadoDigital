@@ -187,13 +187,23 @@ async function enviarCadastroCliente() {
     const nome = document.getElementById('nome').value;
     const cpf = document.getElementById('cpf').value;
     const estadocivil = document.getElementById('estadocivil').value;
+    const profissao = document.getElementById('profissao').value;
+    const rg = document.getElementById('rg').value;
+    const telefone = document.getElementById('telefone').value;
+    const email = document.getElementById('email').value;
+    const endereco_completo_com_cep = document.getElementById('endereco_completo_com_cep').value;
 
     // Criar objeto JSON com os dados do formulário
     const data = {
         tenant: tenant,
         nome: nome,
         cpf: cpf,
-        estadocivil: estadocivil
+        estadocivil: estadocivil,
+        profissao: profissao,
+        rg: rg,
+        telefone: telefone,
+        email: email,
+        endereco_completo_com_cep: endereco_completo_com_cep
     };
 
     console.log(data);
@@ -434,14 +444,24 @@ function preencherFormularioAtualizacao(tr) {
     // Preencher os campos do formulário no modal com os dados do cliente
     
     const id_cliente = tr.children[0].innerText;
-    const nome = tr.children[1].innerText; // Índice 2 para a coluna de nome
-    const cpf = tr.children[2].innerText; // Índice 3 para a coluna de CPF
-    const estadocivil = tr.children[3].innerText; // Índice 4 para a coluna de Estado Civil
-    
+    const nome = tr.children[1].innerText; 
+    const cpf = tr.children[2].innerText; 
+    const estadocivil = tr.children[3].innerText; 
+    const profissao = tr.children[4].innerText; 
+    const rg = tr.children[5].innerText; 
+    const telefone = tr.children[6].innerText; 
+    const email = tr.children[7].innerText; 
+    const endereco_completo_com_cep = tr.children[8].innerText;
+
     document.getElementById('update-id-cliente').value = id_cliente;
     document.getElementById('update-nome').value = nome;
     document.getElementById('update-cpf').value = cpf;
     document.getElementById('update-estadocivil').value = estadocivil;
+    document.getElementById('update-profissao').value = profissao;
+    document.getElementById('update-rg').value = rg;
+    document.getElementById('update-telefone').value = telefone;
+    document.getElementById('update-email').value = email;
+    document.getElementById('update-endereco_completo_com_cep').value = endereco_completo_com_cep;
 
     // Abrir o modal de atualização
     const updateModal = document.getElementById('update-modal');
@@ -460,13 +480,23 @@ async function updateCadastroCliente() {
     const nome = document.getElementById('update-nome').value;
     const cpf = document.getElementById('update-cpf').value;
     const estadocivil = document.getElementById('update-estadocivil').value;
-
+    const profissao = document.getElementById('update-profissao').value;
+    const rg = document.getElementById('update-rg').value;
+    const telefone = document.getElementById('update-telefone').value;
+    const email = document.getElementById('update-email').value;
+    const endereco_completo_com_cep = document.getElementById('update-endereco_completo_com_cep').value;
+    
     // Criar objeto JSON com os dados do formulário
     const data = {
         tenant: tenant,
         nome: nome,
         cpf: cpf,
-        estadocivil: estadocivil
+        estadocivil: estadocivil,
+        profissao: profissao,
+        rg: rg,
+        telefone: telefone,
+        email: email,
+        endereco_completo_com_cep: endereco_completo_com_cep
     };
 
     console.log(data);
@@ -504,6 +534,8 @@ async function removerCliente(tr) {
     const tenant = userInfo.id_tenant;
     const id_cliente = tr.children[0].innerText;
 
+    console.log(id_cliente)
+    
     // Criar objeto JSON com os dados do formulário
     const data = {
         tenant: tenant
