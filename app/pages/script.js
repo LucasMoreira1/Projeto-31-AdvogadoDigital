@@ -65,11 +65,11 @@ function showPassword(){
 // Formatacao dos campos
 //
 
-document.addEventListener('DOMContentLoaded', (event) => {
+function mapearCampos(){
     const cpfInput = document.getElementById('cpf');
     const updateCpfInput = document.getElementById('update-cpf');
     const rgInput = document.getElementById('rg');
-    const updateRgInput = docuemnt.getElementById('update-rg');
+    const updateRgInput = document.getElementById('update-rg');
     const telefoneInput = document.getElementById('telefone');
     const updateTelefoneInput = document.getElementById('update-telefone')
 
@@ -79,7 +79,7 @@ document.addEventListener('DOMContentLoaded', (event) => {
     updateRgInput.addEventListener('input', formatRG);
     telefoneInput.addEventListener('input', formatTelefone);
     updateTelefoneInput.addEventListener('input', formatTelefone);
-});
+}
 
 function formatCPF(event) {
     const input = event.target;
@@ -93,12 +93,14 @@ function formatCPF(event) {
 
 function formatRG(event) {
     const input = event.target;
-    let value = input.value.replace(/\D/g, '');
+    let value = input.value.replace(/\W/g, '');
+    // Mantém apenas os 9 primeiros dígitos
     if (value.length > 9) value = value.slice(0, 9);
+    // Aplica a formatação
     input.value = value
         .replace(/(\d{2})(\d)/, '$1.$2')
         .replace(/(\d{3})(\d)/, '$1.$2')
-        .replace(/(\d{3})(\d{1})$/, '$1-$2');
+        .replace(/(\d{3})(.)$/, '$1-$2');
 }
 
 function formatTelefone(event) {
@@ -240,7 +242,7 @@ async function enviarCadastroCliente() {
     const profissao = document.getElementById('profissao').value;
     const rg = document.getElementById('rg').value;
     const telefone = document.getElementById('telefone').value;
-    const email = document.getElementById('email').value;
+    const email = document.getElementById('criar-email').value;
     const endereco_completo_com_cep = document.getElementById('endereco_completo_com_cep').value;
 
     // Criar objeto JSON com os dados do formulário
@@ -258,26 +260,33 @@ async function enviarCadastroCliente() {
 
     console.log(data);
 
-    // Enviar dados para o backend usando fetch
-    fetch('http://mysql-agility.advogadodigital.click:3333/clientes', {
+    fetch(`http://mysql-agility.advogadodigital.click:3333/clientes`, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
         },
         body: JSON.stringify(data),
     })
-    .then(response => response.json())
-    console.log(response)
     .then(data => {
         console.log('Success:', data);
         alert('Cliente registrado com sucesso.');
         // Lógica adicional após o sucesso, se necessário
+        renderizarTabela()
     })
     .catch((error) => {
         console.log('Error:', error);
         alert('Erro no registrar, contate o suporte.');
         // Lógica de tratamento de erro, se necessário
     });
+
+    document.getElementById('nome').value = '';
+    document.getElementById('cpf').value = '';
+    document.getElementById('estadocivil').value = '';
+    document.getElementById('profissao').value = '';
+    document.getElementById('rg').value = '';
+    document.getElementById('telefone').value = '';
+    document.getElementById('criar-email').value = '';
+    document.getElementById('endereco_completo_com_cep').value = '';
 }
 
 // READ 
@@ -397,9 +406,10 @@ async function renderizarTabela() {
             const linkRemover = document.createElement('button');
 
             // Adicionar os atributos data-modal-target e data-modal-toggle
-            // linkRemover.setAttribute('data-modal-target', 'update-modal');
-            // linkRemover.setAttribute('data-modal-toggle', 'update-modal');
-            linkRemover.setAttribute('onclick', 'removerCliente(parentNode.parentNode)');
+            linkRemover.setAttribute('data-modal-target', 'delete-modal');
+            linkRemover.setAttribute('data-modal-toggle', 'delete-modal');
+            linkRemover.setAttribute('onclick', 'preencherFormularioDelete(parentNode.parentNode.parentNode)');
+            // linkRemover.setAttribute('onclick', 'removerCliente(parentNode.parentNode)');
             linkRemover.type = 'button';
 
             // Adicionar classes ao botão
@@ -564,6 +574,7 @@ async function updateCadastroCliente() {
         console.log('Success:', data);
         alert('Dados do cliente atualizados com sucesso.');
         // Lógica adicional após o sucesso, se necessário
+        renderizarTabela()
     })
     .catch((error) => {
         console.log('Error:', error);
@@ -574,7 +585,23 @@ async function updateCadastroCliente() {
 
 // DELETE
 
-async function removerCliente(tr) {
+function preencherFormularioDelete(tr) {
+    // Preencher os campos do formulário no modal com os dados do cliente
+    
+    const id_cliente = tr.children[0].innerText;
+    // const nome = tr.children[1].innerText; 
+    // const cpf = tr.children[2].innerText; 
+
+    document.getElementById('delete-id-cliente').value = id_cliente;
+    // document.getElementById('delete-nome').value = nome;
+    // document.getElementById('delete-cpf').value = cpf;
+
+    // Abrir o modal de delete
+    const deleteModal = document.getElementById('delete-modal');
+    deleteModal.classList.remove('hidden');
+}
+
+async function removerCliente() {
     // Evitar o comportamento padrão do formulário
     event.preventDefault();
 
@@ -582,7 +609,7 @@ async function removerCliente(tr) {
     
     // Obter valores dos campos do formulário
     const tenant = userInfo.id_tenant;
-    const id_cliente = tr.children[0].innerText;
+    const id_cliente = document.getElementById('delete-id-cliente').value;
 
     console.log(id_cliente)
     
