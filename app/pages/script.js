@@ -62,6 +62,53 @@ function showPassword(){
 }
 
 //
+// Formatacao dos campos
+//
+
+document.addEventListener('DOMContentLoaded', (event) => {
+    const cpfInput = document.getElementById('cpf');
+    const updateCpfInput = document.getElementById('update-cpf');
+    const rgInput = document.getElementById('rg');
+    const updateRgInput = docuemnt.getElementById('update-rg');
+    const telefoneInput = document.getElementById('telefone');
+    const updateTelefoneInput = document.getElementById('update-telefone')
+
+    cpfInput.addEventListener('input', formatCPF);
+    rgInput.addEventListener('input', formatRG);
+    telefoneInput.addEventListener('input', formatTelefone);
+});
+
+function formatCPF(event) {
+    const input = event.target;
+    let value = input.value.replace(/\D/g, '');
+    if (value.length > 11) value = value.slice(0, 11);
+    input.value = value
+        .replace(/(\d{3})(\d)/, '$1.$2')
+        .replace(/(\d{3})(\d)/, '$1.$2')
+        .replace(/(\d{3})(\d{1,2})$/, '$1-$2');
+}
+
+function formatRG(event) {
+    const input = event.target;
+    let value = input.value.replace(/\D/g, '');
+    if (value.length > 9) value = value.slice(0, 9);
+    input.value = value
+        .replace(/(\d{2})(\d)/, '$1.$2')
+        .replace(/(\d{3})(\d)/, '$1.$2')
+        .replace(/(\d{3})(\d{1})$/, '$1-$2');
+}
+
+function formatTelefone(event) {
+    const input = event.target;
+    let value = input.value.replace(/\D/g, '');
+    if (value.length > 11) value = value.slice(0, 11);
+    input.value = value
+        .replace(/(\d{2})(\d)/, '($1)$2')
+        .replace(/(\d{5})(\d)/, '$1-$2');
+}
+
+
+//
 // Login
 //
 
