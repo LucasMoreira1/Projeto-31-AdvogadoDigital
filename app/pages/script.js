@@ -78,7 +78,7 @@ document.addEventListener('DOMContentLoaded', (event) => {
     rgInput.addEventListener('input', formatRG);
     updateRgInput.addEventListener('input', formatRG);
     telefoneInput.addEventListener('input', formatTelefone);
-    updateTelefoneInput.addEventListener('input', formatTelefone)
+    updateTelefoneInput.addEventListener('input', formatTelefone);
 });
 
 function formatCPF(event) {
