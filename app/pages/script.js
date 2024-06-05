@@ -113,6 +113,69 @@ function formatTelefone(event) {
 }
 
 
+// Função Busca CEP
+
+async function buscarCEP() {
+    const cep = document.getElementById('cep').value;
+
+    if (cep.length !== 8 || isNaN(cep)) {
+        alert('CEP inválido. Por favor, insira um CEP válido.');
+        return;
+    }
+
+    try {
+        const response = await fetch(`https://viacep.com.br/ws/${cep}/json/`);
+        if (!response.ok) {
+            throw new Error('Erro ao buscar o CEP.');
+        }
+        const data = await response.json();
+
+        if (data.erro) {
+            alert('CEP não encontrado.');
+            return;
+        }
+
+        document.getElementById('rua').value = data.logradouro;
+        document.getElementById('bairro').value = data.bairro;
+        document.getElementById('cidade').value = data.localidade;
+        document.getElementById('estado').value = data.uf;
+    } catch (error) {
+        alert('Erro ao buscar o CEP. Por favor, tente novamente.');
+        console.error(error);
+    }
+}
+
+async function buscarCEPupdate() {
+    const cep = document.getElementById('update-cep').value;
+
+    if (cep.length !== 8 || isNaN(cep)) {
+        alert('CEP inválido. Por favor, insira um CEP válido.');
+        return;
+    }
+
+    try {
+        const response = await fetch(`https://viacep.com.br/ws/${cep}/json/`);
+        if (!response.ok) {
+            throw new Error('Erro ao buscar o CEP.');
+        }
+        const data = await response.json();
+
+        if (data.erro) {
+            alert('CEP não encontrado.');
+            return;
+        }
+
+        document.getElementById('update-rua').value = data.logradouro;
+        document.getElementById('update-bairro').value = data.bairro;
+        document.getElementById('update-cidade').value = data.localidade;
+        document.getElementById('update-estado').value = data.uf;
+    } catch (error) {
+        alert('Erro ao buscar o CEP. Por favor, tente novamente.');
+        console.error(error);
+    }
+}
+
+
 //
 // Login
 //
@@ -220,6 +283,40 @@ async function realizarLogin(event) {
 
 // CLIENTES
 
+async function limparCamposCreate(){
+    document.getElementById('nome').value = '';
+    document.getElementById('cpf').value = '';
+    document.getElementById('estadocivil').value = '';
+    document.getElementById('profissao').value = '';
+    document.getElementById('rg').value = '';
+    document.getElementById('telefone').value = '';
+    document.getElementById('criar-email').value = '';
+    document.getElementById('cep').value = '';
+    document.getElementById('rua').value = '';
+    document.getElementById('numero').value = '';
+    document.getElementById('complemento').value = '';
+    document.getElementById('bairro').value = '';
+    document.getElementById('cidade').value = '';
+    document.getElementById('estado').value = '';
+}
+
+async function limparCamposUpdate(){
+    document.getElementById('update-nome').value = '';
+    document.getElementById('update-cpf').value = '';
+    document.getElementById('update-estadocivil').value = '';
+    document.getElementById('update-profissao').value = '';
+    document.getElementById('update-rg').value = '';
+    document.getElementById('update-telefone').value = '';
+    document.getElementById('update-email').value = '';
+    document.getElementById('update-cep').value = '';
+    document.getElementById('update-rua').value = '';
+    document.getElementById('update-numero').value = '';
+    document.getElementById('update-complemento').value = '';
+    document.getElementById('update-bairro').value = '';
+    document.getElementById('update-cidade').value = '';
+    document.getElementById('update-estado').value = '';
+}
+
 // CREATE
 async function verificarCPFExistente(CPF) {
     const response = await fetch(`http://mysql-agility.advogadodigital.click:3333/clientes/${CPF}`);
@@ -243,8 +340,14 @@ async function enviarCadastroCliente() {
     const rg = document.getElementById('rg').value;
     const telefone = document.getElementById('telefone').value;
     const email = document.getElementById('criar-email').value;
-    const endereco_completo_com_cep = document.getElementById('endereco_completo_com_cep').value;
-
+    const cep = document.getElementById('cep').value;
+    const rua = document.getElementById('rua').value;
+    const numero = document.getElementById('numero').value;
+    const complemento = document.getElementById('complemento').value;
+    const bairro = document.getElementById('bairro').value;
+    const cidade = document.getElementById('cidade').value;
+    const estado = document.getElementById('estado').value;
+    
     // Criar objeto JSON com os dados do formulário
     const data = {
         tenant: tenant,
@@ -255,7 +358,13 @@ async function enviarCadastroCliente() {
         rg: rg,
         telefone: telefone,
         email: email,
-        endereco_completo_com_cep: endereco_completo_com_cep
+        cep: cep,
+        rua: rua,
+        numero: numero,
+        complemento: complemento,
+        bairro: bairro,
+        cidade: cidade,
+        estado: estado
     };
 
     console.log(data);
@@ -279,14 +388,7 @@ async function enviarCadastroCliente() {
         // Lógica de tratamento de erro, se necessário
     });
 
-    document.getElementById('nome').value = '';
-    document.getElementById('cpf').value = '';
-    document.getElementById('estadocivil').value = '';
-    document.getElementById('profissao').value = '';
-    document.getElementById('rg').value = '';
-    document.getElementById('telefone').value = '';
-    document.getElementById('criar-email').value = '';
-    document.getElementById('endereco_completo_com_cep').value = '';
+    limparCamposCreate()
 }
 
 // READ 
@@ -511,7 +613,13 @@ function preencherFormularioAtualizacao(tr) {
     const rg = tr.children[5].innerText; 
     const telefone = tr.children[6].innerText; 
     const email = tr.children[7].innerText; 
-    const endereco_completo_com_cep = tr.children[8].innerText;
+    const cep = tr.children[8].innerText; 
+    const rua = tr.children[9].innerText; 
+    const numero = tr.children[10].innerText; 
+    const complemento = tr.children[11].innerText; 
+    const bairro = tr.children[12].innerText; 
+    const cidade = tr.children[13].innerText; 
+    const estado = tr.children[14].innerText; 
 
     document.getElementById('update-id-cliente').value = id_cliente;
     document.getElementById('update-nome').value = nome;
@@ -521,7 +629,13 @@ function preencherFormularioAtualizacao(tr) {
     document.getElementById('update-rg').value = rg;
     document.getElementById('update-telefone').value = telefone;
     document.getElementById('update-email').value = email;
-    document.getElementById('update-endereco_completo_com_cep').value = endereco_completo_com_cep;
+    document.getElementById('update-cep').value = cep;
+    document.getElementById('update-rua').value = rua;
+    document.getElementById('update-numero').value = numero;
+    document.getElementById('update-complemento').value = complemento;
+    document.getElementById('update-bairro').value = bairro;
+    document.getElementById('update-cidade').value = cidade;
+    document.getElementById('update-estado').value = estado;
 
     // Abrir o modal de atualização
     const updateModal = document.getElementById('update-modal');
@@ -544,7 +658,13 @@ async function updateCadastroCliente() {
     const rg = document.getElementById('update-rg').value;
     const telefone = document.getElementById('update-telefone').value;
     const email = document.getElementById('update-email').value;
-    const endereco_completo_com_cep = document.getElementById('update-endereco_completo_com_cep').value;
+    const cep = document.getElementById('update-cep').value;
+    const rua = document.getElementById('update-rua').value;
+    const numero = document.getElementById('update-numero').value;
+    const complemento = document.getElementById('update-complemento').value;
+    const bairro = document.getElementById('update-bairro').value;
+    const cidade = document.getElementById('update-cidade').value;
+    const estado = document.getElementById('update-estado').value;
     
     // Criar objeto JSON com os dados do formulário
     const data = {
@@ -556,7 +676,13 @@ async function updateCadastroCliente() {
         rg: rg,
         telefone: telefone,
         email: email,
-        endereco_completo_com_cep: endereco_completo_com_cep
+        cep: cep,
+        rua: rua,
+        numero: numero,
+        complemento: complemento,
+        bairro: bairro,
+        cidade: cidade,
+        estado: estado
     };
 
     console.log(data);
@@ -589,12 +715,8 @@ function preencherFormularioDelete(tr) {
     // Preencher os campos do formulário no modal com os dados do cliente
     
     const id_cliente = tr.children[0].innerText;
-    // const nome = tr.children[1].innerText; 
-    // const cpf = tr.children[2].innerText; 
 
     document.getElementById('delete-id-cliente').value = id_cliente;
-    // document.getElementById('delete-nome').value = nome;
-    // document.getElementById('delete-cpf').value = cpf;
 
     // Abrir o modal de delete
     const deleteModal = document.getElementById('delete-modal');
@@ -643,6 +765,431 @@ async function removerCliente() {
 }
 
 // FIM CLIENTES
+
+// REU
+
+// CREATE
+async function verificarCPFCNPJExistente(CPFCNPJ) {
+    const response = await fetch(`http://mysql-agility.advogadodigital.click:3333/reus/${CPFCNPJ}`);
+    const data = await response.json();
+    return data.existe;
+}
+
+async function enviarCadastroReu() {
+    // Evitar o comportamento padrão do formulário
+    event.preventDefault();
+
+    const userInfo = JSON.parse(localStorage.getItem('userInfo'));
+    
+    // Obter valores dos campos do formulário
+    const tenant = userInfo.id_tenant;
+    const nome = document.getElementById('nome').value;
+    const cpfcnpj = document.getElementById('cpfcnpj').value;
+    const estadocivil = document.getElementById('estadocivil').value;
+    const profissao = document.getElementById('profissao').value;
+    const rg = document.getElementById('rg').value;
+    const telefone = document.getElementById('telefone').value;
+    const email = document.getElementById('criar-email').value;
+    const endereco_completo_com_cep = document.getElementById('endereco_completo_com_cep').value;
+
+    // Criar objeto JSON com os dados do formulário
+    const data = {
+        tenant: tenant,
+        nome: nome,
+        cpfcnpj: cpfcnpj,
+        estadocivil: estadocivil,
+        profissao: profissao,
+        rg: rg,
+        telefone: telefone,
+        email: email,
+        endereco_completo_com_cep: endereco_completo_com_cep
+    };
+
+    console.log(data);
+
+    fetch(`http://mysql-agility.advogadodigital.click:3333/reus`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(data),
+    })
+    .then(data => {
+        console.log('Success:', data);
+        alert('Reu registrado com sucesso.');
+        // Lógica adicional após o sucesso, se necessário
+        renderizarTabelaReu()
+    })
+    .catch((error) => {
+        console.log('Error:', error);
+        alert('Erro no registrar, contate o suporte.');
+        // Lógica de tratamento de erro, se necessário
+    });
+
+    document.getElementById('nome').value = '';
+    document.getElementById('cpfcnpj').value = '';
+    document.getElementById('estadocivil').value = '';
+    document.getElementById('profissao').value = '';
+    document.getElementById('rg').value = '';
+    document.getElementById('telefone').value = '';
+    document.getElementById('criar-email').value = '';
+    document.getElementById('endereco_completo_com_cep').value = '';
+}
+
+// READ 
+
+// Função para buscar reus no backend
+async function buscarReu() { 
+    try {
+        const tenant = userInfo.id_tenant;
+        const resposta = await fetch(`http://mysql-agility.advogadodigital.click:3333/reus/${tenant}`);
+        const reus = await resposta.json();
+        return reus;
+    } catch (error) {
+        console.error('Erro ao buscar reus:', error);
+        throw error;
+    }
+}
+
+// Função para renderizar os dados na tabela
+async function renderizarTabelaReu() {
+    const tbody = document.querySelector('tbody');
+
+    try {
+        // Buscar reus no backend
+        const reus = await buscarReu();
+        // Limpar o conteúdo atual da tabela
+        tbody.innerHTML = '';
+
+        // Renderizar os novos dados na tabela
+        reus.forEach((reu) => {
+            const tr = document.createElement('tr');
+            tr.classList.add('bg-white', 'border-b', 'dark:bg-gray-800', 'dark:border-gray-700', 'hover:bg-gray-50', 'dark:hover:bg-gray-600');
+
+            //// Adicionar checkbox
+            // const tdCheckbox = document.createElement('td');
+            // const checkbox = document.createElement('input');
+            // checkbox.type = 'checkbox';
+            // checkbox.classList.add('ml-3.5', 'w-4', 'h-4', 'text-blue-600', 'bg-gray-100', 'border-gray-300', 'rounded', 'focus:ring-blue-500', 'dark:focus:ring-blue-600', 'dark:ring-offset-gray-800', 'dark:focus:ring-offset-gray-800', 'focus:ring-2', 'dark:bg-gray-700', 'dark:border-gray-600');
+            // tdCheckbox.appendChild(checkbox);
+            // tr.appendChild(tdCheckbox);
+
+            // Adicionar as células da linha
+            Object.values(reu).forEach((value) => {
+                const td = document.createElement('td');
+                td.classList.add('px-6', 'py-3');
+            
+                // Verificar se o valor é uma string antes de aplicar a formatação
+                const textoFormatado = typeof value === 'string' ? value.replace(/\b\w+/g, substr => substr.charAt(0).toUpperCase() + substr.slice(1).toLowerCase()).replace(/\b\w+(?=\))/g, substr => substr.toLowerCase()) : value;
+            
+                td.textContent = textoFormatado;
+                tr.appendChild(td);
+            });
+
+            // Adicionar ação (Editar)
+            const tdAcao = document.createElement('td');
+            const containerBotoes = document.createElement('div');
+            const linkEditar = document.createElement('button');
+
+            containerBotoes.classList.add('flex')
+
+            // Adicionar os atributos data-modal-target e data-modal-toggle
+            linkEditar.setAttribute('data-modal-target', 'update-modal');
+            linkEditar.setAttribute('data-modal-toggle', 'update-modal');
+            linkEditar.setAttribute('onclick', 'preencherFormularioAtualizacaoReu(parentNode.parentNode.parentNode)');
+            linkEditar.type = 'button';
+
+            // Adicionar classes ao botão
+            linkEditar.classList.add(
+            'ml-3',
+            'block',
+            'text-black',
+            'bg-gray-600',
+            'hover:bg-gray-800',
+            'focus:ring-4',
+            'focus:outline-none',
+            'focus:ring-gray-900',
+            'font-medium',
+            'rounded-lg',
+            'text-sm',
+            'px-5',
+            'py-2.5',
+            'text-center',
+            'dark:bg-gray-400',
+            'dark:hover:bg-gray-500',
+            'dark:focus:ring-gray-600'
+            );
+
+            // Criar o elemento SVG
+            const svgEditar = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+            svgEditar.setAttribute('xmlns', 'http://www.w3.org/2000/svg');
+            svgEditar.setAttribute('fill', 'none');
+            svgEditar.setAttribute('viewBox', '0 0 24 24');
+            svgEditar.setAttribute('stroke-width', '1.5');
+            svgEditar.setAttribute('stroke', 'currentColor');
+            svgEditar.classList.add('w-6', 'h-6');
+
+            // Criar o caminho do ícone
+            const pathEditar = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+            pathEditar.setAttribute('stroke-linecap', 'round');
+            pathEditar.setAttribute('stroke-linejoin', 'round');
+            pathEditar.setAttribute('d', 'm16.862 4.487 1.687-1.688a1.875 1.875 0 1 1 2.652 2.652L10.582 16.07a4.5 4.5 0 0 1-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 0 1 1.13-1.897l8.932-8.931Zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0 1 15.75 21H5.25A2.25 2.25 0 0 1 3 18.75V8.25A2.25 2.25 0 0 1 5.25 6H10');
+
+            // Adicionar o caminho ao SVG
+            svgEditar.appendChild(pathEditar);
+
+            // Adicionar o SVG ao botão
+            linkEditar.appendChild(svgEditar);
+
+            // // Adicionar o botão ao TD
+            // tdEditar.appendChild(linkEditar);
+
+            // // Adicionar o TD à TR
+            // tr.appendChild(tdEditar);
+
+
+            // Adicionar ação (Remover)
+            // const tdRemover = document.createElement('td');
+            const linkRemover = document.createElement('button');
+
+            // Adicionar os atributos data-modal-target e data-modal-toggle
+            linkRemover.setAttribute('data-modal-target', 'delete-modal');
+            linkRemover.setAttribute('data-modal-toggle', 'delete-modal');
+            linkRemover.setAttribute('onclick', 'preencherFormularioDeleteReu(parentNode.parentNode.parentNode)');
+            // linkRemover.setAttribute('onclick', 'removerCliente(parentNode.parentNode)');
+            linkRemover.type = 'button';
+
+            // Adicionar classes ao botão
+            linkRemover.classList.add(
+            'ml-3', 
+            'block',
+            'text-white',
+            'bg-red-700',
+            'hover:bg-red-800',
+            'focus:ring-4',
+            'focus:outline-none',
+            'focus:ring-red-300',
+            'font-medium',
+            'rounded-lg',
+            'text-sm',
+            'px-5',
+            'py-2.5',
+            'text-center',
+            'dark:bg-red-900',
+            'dark:hover:bg-red-700',
+            'dark:focus:ring-red-800'
+            );
+
+            // Criar o elemento SVG
+            const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+            svg.setAttribute('xmlns', 'http://www.w3.org/2000/svg');
+            svg.setAttribute('fill', 'none');
+            svg.setAttribute('viewBox', '0 0 24 24');
+            svg.setAttribute('stroke-width', '1.5');
+            svg.setAttribute('stroke', 'currentColor');
+            svg.classList.add('w-6', 'h-6');
+
+            // Criar o caminho do ícone
+            const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+            path.setAttribute('stroke-linecap', 'round');
+            path.setAttribute('stroke-linejoin', 'round');
+            path.setAttribute('d', 'M22 10.5h-6m-2.25-4.125a3.375 3.375 0 11-6.75 0 3.375 3.375 0 016.75 0zM4 19.235v-.11a6.375 6.375 0 0112.75 0v.109A12.318 12.318 0 0110.374 21c-2.331 0-4.512-.645-6.374-1.766');
+
+            // Adicionar o caminho ao SVG
+            svg.appendChild(path);
+
+            // Adicionar o SVG ao botão
+            linkRemover.appendChild(svg);
+
+            // // Adicionar o botão ao TD
+            // tdRemover.appendChild(linkRemover);
+
+            // // Adicionar o TD à TR
+            // tr.appendChild(tdRemover);
+            containerBotoes.appendChild(linkEditar);
+            containerBotoes.appendChild(linkRemover);
+
+            tdAcao.appendChild(containerBotoes);
+            tr.appendChild(tdAcao);
+
+            tbody.appendChild(tr);
+        });
+    } catch (error) {
+        console.error('Erro ao renderizar tabela:', error);
+    }
+    initFlowbite();
+}
+
+async function pesquisaReu(){
+
+    // Seletor do input de pesquisa
+    const inputPesquisa = document.getElementById('pesquisaReu');
+
+    // Função para filtrar as linhas da tabela
+    function filtrarTabela() {        
+        const termoPesquisa = inputPesquisa.value.toLowerCase();
+        
+        const linhasTabela = document.querySelectorAll('tbody tr');
+
+        linhasTabela.forEach((linha) => {
+            const textoLinha = linha.innerText.toLowerCase();
+
+            if (textoLinha.includes(termoPesquisa)) {
+                linha.style.display = ''; // Mostrar a linha se houver uma correspondência
+            } else {
+                linha.style.display = 'none'; // Ocultar a linha se não houver correspondência
+            }
+        });
+    }
+
+    // Adicionar ouvinte de evento para o evento 'input' (disparado enquanto você digita)
+    inputPesquisa.addEventListener('input', filtrarTabela);
+}
+
+// UPDATE
+function preencherFormularioAtualizacaoReu(tr) {
+    // Preencher os campos do formulário no modal com os dados do reu
+    
+    const id_reu = tr.children[0].innerText;
+    const nome = tr.children[1].innerText; 
+    const cpfcnpj = tr.children[2].innerText; 
+    const estadocivil = tr.children[3].innerText; 
+    const profissao = tr.children[4].innerText; 
+    const rg = tr.children[5].innerText; 
+    const telefone = tr.children[6].innerText; 
+    const email = tr.children[7].innerText; 
+    const endereco_completo_com_cep = tr.children[8].innerText;
+
+    document.getElementById('update-id-reu').value = id_reu;
+    document.getElementById('update-nome').value = nome;
+    document.getElementById('update-cpfcnpj').value = cpfcnpj;
+    document.getElementById('update-estadocivil').value = estadocivil;
+    document.getElementById('update-profissao').value = profissao;
+    document.getElementById('update-rg').value = rg;
+    document.getElementById('update-telefone').value = telefone;
+    document.getElementById('update-email').value = email;
+    document.getElementById('update-endereco_completo_com_cep').value = endereco_completo_com_cep;
+
+    // Abrir o modal de atualização
+    const updateModal = document.getElementById('update-modal');
+    updateModal.classList.remove('hidden');
+}
+
+async function updateCadastroReu() {
+    // Evitar o comportamento padrão do formulário
+    event.preventDefault();
+
+    const userInfo = JSON.parse(localStorage.getItem('userInfo'));
+    
+    // Obter valores dos campos do formulário
+    const tenant = userInfo.id_tenant;
+    const id_reu = document.getElementById('update-id-reu').value;
+    const nome = document.getElementById('update-nome').value;
+    const cpfcnpj = document.getElementById('update-cpfcnpj').value;
+    const estadocivil = document.getElementById('update-estadocivil').value;
+    const profissao = document.getElementById('update-profissao').value;
+    const rg = document.getElementById('update-rg').value;
+    const telefone = document.getElementById('update-telefone').value;
+    const email = document.getElementById('update-email').value;
+    const endereco_completo_com_cep = document.getElementById('update-endereco_completo_com_cep').value;
+    
+    // Criar objeto JSON com os dados do formulário
+    const data = {
+        tenant: tenant,
+        nome: nome,
+        cpfcnpj: cpfcnpj,
+        estadocivil: estadocivil,
+        profissao: profissao,
+        rg: rg,
+        telefone: telefone,
+        email: email,
+        endereco_completo_com_cep: endereco_completo_com_cep
+    };
+
+    console.log(data);
+
+    // Enviar dados para o backend usando fetch
+    fetch(`http://mysql-agility.advogadodigital.click:3333/reus/${id_reu}`, {
+        method: 'PUT',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(data),
+    })
+    // .then(response => response.json())
+    .then(data => {
+        console.log('Success:', data);
+        alert('Dados do reu atualizados com sucesso.');
+        // Lógica adicional após o sucesso, se necessário
+        renderizarTabelaReu()
+    })
+    .catch((error) => {
+        console.log('Error:', error);
+        alert('Erro no atualizar, contate o suporte.');
+        // Lógica de tratamento de erro, se necessário
+    });
+}
+
+// DELETE
+
+function preencherFormularioDeleteReu(tr) {
+    // Preencher os campos do formulário no modal com os dados do reu
+    
+    const id_reu = tr.children[0].innerText;
+    // const nome = tr.children[1].innerText; 
+    // const cpf = tr.children[2].innerText; 
+
+    document.getElementById('delete-id-reu').value = id_reu;
+    // document.getElementById('delete-nome').value = nome;
+    // document.getElementById('delete-cpf').value = cpf;
+
+    // Abrir o modal de delete
+    const deleteModal = document.getElementById('delete-modal');
+    deleteModal.classList.remove('hidden');
+}
+
+async function removerReu() {
+    // Evitar o comportamento padrão do formulário
+    event.preventDefault();
+
+    const userInfo = JSON.parse(localStorage.getItem('userInfo'));
+    
+    // Obter valores dos campos do formulário
+    const tenant = userInfo.id_tenant;
+    const id_reu = document.getElementById('delete-id-reu').value;
+
+    console.log(id_reu)
+    
+    // Criar objeto JSON com os dados do formulário
+    const data = {
+        tenant: tenant
+    };
+
+    console.log(data);
+
+    // Enviar dados para o backend usando fetch
+    fetch(`http://mysql-agility.advogadodigital.click:3333/reus/${id_reu}`, {
+        method: 'DELETE',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(data),
+    })
+    // .then(response => response.json())
+    .then(data => {
+        console.log('Success:', data);
+        alert('Dados do reu deletados com sucesso.');
+        // Lógica adicional após o sucesso, se necessário
+        renderizarTabela()
+    })
+    .catch((error) => {
+        console.log('Error:', error);
+        alert('Erro ao deletar, contate o suporte.');
+        // Lógica de tratamento de erro, se necessário
+    });
+}
+
+// FIM REU
 
 // PROCESSOS
 
@@ -813,3 +1360,5 @@ function preencherNomeReuDocumentos(tr) {
     const closeModalReu = document.getElementById('closeModalReu');
     closeModalReu.click();
 }
+
+// FIM DOCUMENTOS
