@@ -195,6 +195,8 @@
         const tenantInfo = JSON.parse(localStorage.getItem('tenantInfo'));
         const cidadeTenant = tenantInfo.cidade; 
         const estadoTenant = tenantInfo.estado; 
+        const responsavelTenant = tenantInfo.responsavel; 
+        const emailTenant = tenantInfo.email; 
 
         if (!userInfo) {
         // Redirecione o usuário para a página de login se não estiver autenticado
@@ -286,6 +288,8 @@
 
                     document.getElementById('cidade-tenant').value = cidadeTenant;
                     document.getElementById('estado-tenant').value = estadoTenant;
+                    document.getElementById('responsavel-tenant').value = responsavelTenant;
+                    document.getElementById('email-tenant').value = emailTenant;
                     // Iniciar componentes do Flowbite
                     initFlowbite();
                 });

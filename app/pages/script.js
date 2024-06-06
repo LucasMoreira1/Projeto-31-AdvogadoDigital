@@ -1301,6 +1301,10 @@ async function gerarDocumento() {
     
     const tenantCidade = document.getElementById('cidade-tenant').value;
     const tenantEstado = document.getElementById('estado-tenant').value;
+    const tenantResponsavel = document.getElementById('responsavel-tenant').value;
+    const tenantEmail = document.getElementById('email-tenant').value;
+
+    const tipoDocumento = document.getElementById('document-type').value;
 
     const data = {
         clienteID,
@@ -1320,7 +1324,10 @@ async function gerarDocumento() {
         clienteCidade,
         clienteEstado,
         tenantCidade,
-        tenantEstado
+        tenantEstado,
+        tenantResponsavel,
+        tenantEmail,
+        tipoDocumento
     };
 
     const response = await fetch('http://mysql-agility.advogadodigital.click:3333/gerar-docx', {
@@ -1341,9 +1348,24 @@ async function gerarDocumento() {
       const a = document.createElement('a');
       a.href = url;
   
-      // Defina o nome do arquivo para download
-      a.download = `${clienteID}_${clienteNome}_Declaracao_Hipossuficiencia.docx`;
-  
+      // Defina o nome do arquivo para download  
+      switch (tipoDocumento) {
+        case '1':
+            a.download = `${clienteID}_${clienteNome}_Contrato_Honorarios_Advocaticios.docx`;
+            break;
+        case '2':
+            a.download = `${clienteID}_${clienteNome}_Declaracao_Hipossuficiencia.docx`;
+            break;
+        case '3':
+            a.download = `${clienteID}_${clienteNome}_Manifesto.docx`;
+            break;
+        case '4':
+            a.download = `${clienteID}_${clienteNome}_Procuracao.docx`;
+            break;
+        default:
+            throw new Error('Tipo de documento inválido');
+      }
+
       // Anexe o link ao corpo do documento
       document.body.appendChild(a);
   
