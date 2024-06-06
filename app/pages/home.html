@@ -192,8 +192,10 @@
     <script>
         // Verifique se o usuário está autenticado
         const userInfo = JSON.parse(localStorage.getItem('userInfo'));
-        // const tenantInfo = JSON.parse(localStorage.getItem('tenantInfo'));
-    
+        const tenantInfo = JSON.parse(localStorage.getItem('tenantInfo'));
+        const cidadeTenant = tenantInfo.cidade; 
+        const estadoTenant = tenantInfo.estado; 
+
         if (!userInfo) {
         // Redirecione o usuário para a página de login se não estiver autenticado
         window.location.href = '../../index.html';
@@ -202,7 +204,7 @@
         const tenant = userInfo.nometenant;
         const nome = userInfo.nome;
         const email = userInfo.email;
-    
+        
         // Agora você pode usar essas informações conforme necessário na sua página
         // Por exemplo, para definir o título da página
         document.title = `Advogado Digital | ${tenant}`;
@@ -282,6 +284,8 @@
                     // Mostrar o conteúdo do template na home
                     contentArea.innerHTML = data;
 
+                    document.getElementById('cidade-tenant').value = cidadeTenant;
+                    document.getElementById('estado-tenant').value = estadoTenant;
                     // Iniciar componentes do Flowbite
                     initFlowbite();
                 });

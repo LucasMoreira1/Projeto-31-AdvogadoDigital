@@ -1,4 +1,9 @@
 //
+// Constantes / Variáveis Globais
+//
+let sortDirection = 1;
+
+//
 // DarkMode
 //
 const darkMode = document.getElementById('initial')
@@ -69,7 +74,9 @@ function mapearCampos(){
     const cpfInput = document.getElementById('cpf');
     const updateCpfInput = document.getElementById('update-cpf');
     const rgInput = document.getElementById('rg');
+    const orgemissorInput = document.getElementById('orgemissor');
     const updateRgInput = document.getElementById('update-rg');
+    const updateOrgemissorInput = document.getElementById('update-orgemissor');
     const telefoneInput = document.getElementById('telefone');
     const updateTelefoneInput = document.getElementById('update-telefone')
 
@@ -77,6 +84,8 @@ function mapearCampos(){
     updateCpfInput.addEventListener('input', formatCPF);
     rgInput.addEventListener('input', formatRG);
     updateRgInput.addEventListener('input', formatRG);
+    orgemissorInput.addEventListener('input', formatOrgemissor);
+    updateOrgemissorInput.addEventListener('input', formatOrgemissor);
     telefoneInput.addEventListener('input', formatTelefone);
     updateTelefoneInput.addEventListener('input', formatTelefone);
 }
@@ -89,6 +98,16 @@ function formatCPF(event) {
         .replace(/(\d{3})(\d)/, '$1.$2')
         .replace(/(\d{3})(\d)/, '$1.$2')
         .replace(/(\d{3})(\d{1,2})$/, '$1-$2');
+}
+
+function formatOrgemissor(event) {
+    const input = event.target;
+    let value = input.value.replace(/\W/g, '');
+    // Mantém apenas os 9 primeiros dígitos
+    if (value.length > 9) value = value.slice(0, 9);
+    // Aplica a formatação
+    input.value = value
+        .replace(/(\d{3})(\d)/, '$1/$2')
 }
 
 function formatRG(event) {
@@ -112,8 +131,9 @@ function formatTelefone(event) {
         .replace(/(\d{5})(\d)/, '$1-$2');
 }
 
-
+//
 // Função Busca CEP
+//
 
 async function buscarCEP() {
     const cep = document.getElementById('cep').value;
@@ -175,7 +195,6 @@ async function buscarCEPupdate() {
     }
 }
 
-
 //
 // Login
 //
@@ -236,47 +255,48 @@ async function cadastroLogin() {
 
 // Adicionar um ouvinte de evento para a submissão do formulário
 async function realizarLogin(event) {
-  event.preventDefault(); // Impedir o envio padrão do formulário
 
-  const email = document.getElementById('email').value;
-  const senha = document.getElementById('password').value;
+    event.preventDefault(); // Impedir o envio padrão do formulário
 
-  console.log('Email:', email);
-  console.log('Password:', senha);
+    const email = document.getElementById('email').value;
+    const senha = document.getElementById('password').value;
 
-  // Enviar uma solicitação para verificar as credenciais
-  const response = await fetch('http://mysql-agility.advogadodigital.click:3333/login/validacao', {
-      method: 'POST',
-      headers: {
-          'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ email, senha }),
-  });
+    console.log('Email:', email);
+    console.log('Password:', senha);
 
-  try {
-      const data = await response.json();
+    try {
+        const response = await fetch('http://mysql-agility.advogadodigital.click:3333/login/validacao', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ email, senha }),
+        });
 
-      // Verificar a resposta do backend
-    if (response.ok) {
-        // Credenciais válidas, armazenar informações do usuário no Local Storage
-        const userInfo = data.userInfo;
-        localStorage.setItem('userInfo', JSON.stringify(userInfo));
-    
-        // Redirecionar para a página de home.html
-        window.location.href = 'home.html';
-        console.log("ok");
-    } else {
-        // Credenciais inválidas, exibir o modal ou mensagem de erro
-        const modal = document.getElementById('botao-senha-invalida');
-        console.log("not-ok", data.message);
-        modal.click();
+        const data = await response.json();
+
+        // Verificar a resposta do backend
+        if (response.ok) {
+            // Credenciais válidas, armazenar informações do usuário e do Tenant no Local Storage
+            const { userInfo, tenantInfo } = data;
+            localStorage.setItem('userInfo', JSON.stringify(userInfo));
+            localStorage.setItem('tenantInfo', JSON.stringify(tenantInfo));
+        
+            // Redirecionar para a página de home.html
+            window.location.href = 'home.html';
+            console.log("ok");
+        } else {
+            // Credenciais inválidas, exibir o modal ou mensagem de erro
+            const modal = document.getElementById('botao-senha-invalida');
+            console.log("not-ok", data.message);
+            modal.click();
+        }
+    } catch (error) {
+        console.error('Erro ao processar a resposta JSON:', error);
+        // Tratar o erro, exibir uma mensagem ou fazer algo apropriado
     }
-  } catch (error) {
-      console.error('Erro ao processar a resposta JSON:', error);
-      // Tratar o erro, exibir uma mensagem ou fazer algo apropriado
-  }
 
-  console.log('Fim da função realizarLogin');
+    console.log('Fim da função realizarLogin');
 }
 
 // FIM LOGIN
@@ -338,6 +358,7 @@ async function enviarCadastroCliente() {
     const estadocivil = document.getElementById('estadocivil').value;
     const profissao = document.getElementById('profissao').value;
     const rg = document.getElementById('rg').value;
+    const orgemissor = document.getElementById('orgemissor').value;
     const telefone = document.getElementById('telefone').value;
     const email = document.getElementById('criar-email').value;
     const cep = document.getElementById('cep').value;
@@ -356,6 +377,7 @@ async function enviarCadastroCliente() {
         estadocivil: estadocivil,
         profissao: profissao,
         rg: rg,
+        orgemissor: orgemissor,
         telefone: telefone,
         email: email,
         cep: cep,
@@ -376,15 +398,24 @@ async function enviarCadastroCliente() {
         },
         body: JSON.stringify(data),
     })
+    .then(response => {
+        if (!response.ok) {
+            // Se a resposta não for bem-sucedida, lança um erro com a mensagem apropriada
+            return response.json().then(err => {
+                throw new Error(err.error || 'Erro desconhecido');
+            });
+        }
+        return response.json();
+    })
     .then(data => {
         console.log('Success:', data);
         alert('Cliente registrado com sucesso.');
         // Lógica adicional após o sucesso, se necessário
         renderizarTabela()
     })
-    .catch((error) => {
-        console.log('Error:', error);
-        alert('Erro no registrar, contate o suporte.');
+    .catch((response) => {
+        console.log(response);
+        alert(response);
         // Lógica de tratamento de erro, se necessário
     });
 
@@ -408,11 +439,13 @@ async function buscarClientes() {
 
 // Função para renderizar os dados na tabela
 async function renderizarTabela() {
+    
     const tbody = document.querySelector('tbody');
 
     try {
         // Buscar clientes no backend
         const clientes = await buscarClientes();
+
         // Limpar o conteúdo atual da tabela
         tbody.innerHTML = '';
 
@@ -429,30 +462,39 @@ async function renderizarTabela() {
             // tdCheckbox.appendChild(checkbox);
             // tr.appendChild(tdCheckbox);
 
-            // Adicionar as células da linha
-            Object.values(cliente).forEach((value) => {
-                const td = document.createElement('td');
-                td.classList.add('px-6', 'py-3');
-            
-                // Verificar se o valor é uma string antes de aplicar a formatação
-                const textoFormatado = typeof value === 'string' ? value.replace(/\b\w+/g, substr => substr.charAt(0).toUpperCase() + substr.slice(1).toLowerCase()).replace(/\b\w+(?=\))/g, substr => substr.toLowerCase()) : value;
-            
-                td.textContent = textoFormatado;
-                tr.appendChild(td);
-            });
-
-            // Adicionar ação (Editar)
             const tdAcao = document.createElement('td');
             const containerBotoes = document.createElement('div');
+
             const linkEditar = document.createElement('button');
-
-            containerBotoes.classList.add('flex')
-
-            // Adicionar os atributos data-modal-target e data-modal-toggle
+            linkEditar.setAttribute('id', 'linkEditar');
             linkEditar.setAttribute('data-modal-target', 'update-modal');
             linkEditar.setAttribute('data-modal-toggle', 'update-modal');
             linkEditar.setAttribute('onclick', 'preencherFormularioAtualizacao(parentNode.parentNode.parentNode)');
             linkEditar.type = 'button';
+            
+            // Adicionar as células da linha
+            Object.entries(cliente).forEach(([key, value]) => {
+                const td = document.createElement('td');
+                td.classList.add('px-6', 'py-3');
+            
+                if (['cep', 'rua',  'numero', 'complemento', 'bairro', 'orgemissor', 'estado'].includes(key)) {
+                    td.classList.add('hidden');
+                }
+
+                // Verificar se o valor é uma string antes de aplicar a formatação
+                // const textoFormatado = typeof value === 'string' ? value.replace(/\b\w+/g, substr => substr.charAt(0).toUpperCase() + substr.slice(1).toLowerCase()).replace(/\b\w+(?=\))/g, substr => substr.toLowerCase()) : value;
+            
+                td.textContent = value;
+                td.addEventListener('dblclick', () => {
+                    preencherFormularioAtualizacao(tr);
+    
+                    // Simular clique no botão linkEditar
+                    linkEditar.click();
+                });
+                tr.appendChild(td); 
+            });
+
+            containerBotoes.classList.add('flex')
 
             // Adicionar classes ao botão
             linkEditar.classList.add(
@@ -575,6 +617,32 @@ async function renderizarTabela() {
     initFlowbite();
 }
 
+// Organizar dados da tabela
+function sortTable(columnIndex) {
+    const tableBody = document.querySelector("table tbody");
+    const tableRows = Array.from(tableBody.querySelectorAll("tr"));
+  
+    // Toggle sort direction on each click
+    sortDirection *= -1; // Invert sort direction
+  
+    // Sort the rows based on the selected column and sort direction
+    tableRows.sort((rowA, rowB) => {
+      const cellA = rowA.querySelectorAll("td")[columnIndex].textContent;
+      const cellB = rowB.querySelectorAll("td")[columnIndex].textContent;
+  
+      if (isNaN(cellA) && isNaN(cellB)) {
+        return cellA.localeCompare(cellB) * sortDirection; // Sort strings alphabetically
+      } else {
+        return (cellA - cellB) * sortDirection; // Sort numbers numerically
+      }
+    });
+  
+    // Update the table body with sorted rows
+    tableBody.innerHTML = "";
+    tableRows.forEach(row => tableBody.appendChild(row));
+  }
+  
+
 async function pesquisaCliente(){
 
     // Seletor do input de pesquisa
@@ -607,19 +675,20 @@ function preencherFormularioAtualizacao(tr) {
     
     const id_cliente = tr.children[0].innerText;
     const nome = tr.children[1].innerText; 
-    const cpf = tr.children[2].innerText; 
+    const profissao = tr.children[2].innerText;
     const estadocivil = tr.children[3].innerText; 
-    const profissao = tr.children[4].innerText; 
+    const telefone = tr.children[4].innerText; 
     const rg = tr.children[5].innerText; 
-    const telefone = tr.children[6].innerText; 
-    const email = tr.children[7].innerText; 
-    const cep = tr.children[8].innerText; 
-    const rua = tr.children[9].innerText; 
-    const numero = tr.children[10].innerText; 
-    const complemento = tr.children[11].innerText; 
-    const bairro = tr.children[12].innerText; 
-    const cidade = tr.children[13].innerText; 
-    const estado = tr.children[14].innerText; 
+    const orgemissor = tr.children[6].innerText; 
+    const cpf = tr.children[7].innerText; 
+    const email = tr.children[8].innerText; 
+    const cep = tr.children[9].innerText; 
+    const rua = tr.children[10].innerText; 
+    const numero = tr.children[11].innerText; 
+    const complemento = tr.children[12].innerText; 
+    const bairro = tr.children[13].innerText; 
+    const cidade = tr.children[14].innerText; 
+    const estado = tr.children[15].innerText; 
 
     document.getElementById('update-id-cliente').value = id_cliente;
     document.getElementById('update-nome').value = nome;
@@ -627,6 +696,7 @@ function preencherFormularioAtualizacao(tr) {
     document.getElementById('update-estadocivil').value = estadocivil;
     document.getElementById('update-profissao').value = profissao;
     document.getElementById('update-rg').value = rg;
+    document.getElementById('update-orgemissor').value = orgemissor;
     document.getElementById('update-telefone').value = telefone;
     document.getElementById('update-email').value = email;
     document.getElementById('update-cep').value = cep;
@@ -638,7 +708,10 @@ function preencherFormularioAtualizacao(tr) {
     document.getElementById('update-estado').value = estado;
 
     // Abrir o modal de atualização
+    
     const updateModal = document.getElementById('update-modal');
+    // updateModal.setAttribute('data-modal-target', 'update-modal');
+    // updateModal.setAttribute('data-modal-toggle', 'update-modal');
     updateModal.classList.remove('hidden');
 }
 
@@ -656,6 +729,7 @@ async function updateCadastroCliente() {
     const estadocivil = document.getElementById('update-estadocivil').value;
     const profissao = document.getElementById('update-profissao').value;
     const rg = document.getElementById('update-rg').value;
+    const orgemissor = document.getElementById('update-orgemissor').value;
     const telefone = document.getElementById('update-telefone').value;
     const email = document.getElementById('update-email').value;
     const cep = document.getElementById('update-cep').value;
@@ -674,6 +748,7 @@ async function updateCadastroCliente() {
         estadocivil: estadocivil,
         profissao: profissao,
         rg: rg,
+        orgemissor: orgemissor,
         telefone: telefone,
         email: email,
         cep: cep,
@@ -814,15 +889,24 @@ async function enviarCadastroReu() {
         },
         body: JSON.stringify(data),
     })
+    .then(response => {
+        if (!response.ok) {
+            // Se a resposta não for bem-sucedida, lança um erro com a mensagem apropriada
+            return response.json().then(err => {
+                throw new Error(err.error || 'Erro desconhecido');
+            });
+        }
+        return response.json();
+    })
     .then(data => {
         console.log('Success:', data);
         alert('Reu registrado com sucesso.');
         // Lógica adicional após o sucesso, se necessário
         renderizarTabelaReu()
     })
-    .catch((error) => {
-        console.log('Error:', error);
-        alert('Erro no registrar, contate o suporte.');
+    .catch((response) => {
+        console.log(response);
+        alert(response);
         // Lógica de tratamento de erro, se necessário
     });
 
@@ -1198,17 +1282,53 @@ async function removerReu() {
 async function gerarDocumento() {
     event.preventDefault();
 
+    const clienteID = document.getElementById('id-cliente').value;
     const clienteNome = document.getElementById('nome-cliente').value;
     const clienteCPF = document.getElementById('cpf-cliente').value;
+    const clienteEstadoCivil = document.getElementById('estadocivil-cliente').value;
+    const clienteProfissao = document.getElementById('profissao-cliente').value;
+    const clienteRG = document.getElementById('rg-cliente').value;
+    const clienteOrgEmissor = document.getElementById('orgemissor-cliente').value;
+    const clienteTelefone = document.getElementById('telefone-cliente').value;
+    const clienteEmail = document.getElementById('email-cliente').value;
+    const clienteCEP = document.getElementById('cep-cliente').value;
+    const clienteRua = document.getElementById('rua-cliente').value;
+    const clienteNumero = document.getElementById('numero-cliente').value;
+    const clienteComplemento = document.getElementById('complemento-cliente').value;
+    const clienteBairro = document.getElementById('bairro-cliente').value;
+    const clienteCidade = document.getElementById('cidade-cliente').value;
+    const clienteEstado = document.getElementById('estado-cliente').value;
+    
+    const tenantCidade = document.getElementById('cidade-tenant').value;
+    const tenantEstado = document.getElementById('estado-tenant').value;
 
-    console.log(clienteNome, clienteCPF)
-  
+    const data = {
+        clienteID,
+        clienteNome,
+        clienteCPF,
+        clienteEstadoCivil,
+        clienteProfissao,
+        clienteRG,
+        clienteOrgEmissor,
+        clienteTelefone,
+        clienteEmail,
+        clienteCEP,
+        clienteRua,
+        clienteNumero,
+        clienteComplemento,
+        clienteBairro,
+        clienteCidade,
+        clienteEstado,
+        tenantCidade,
+        tenantEstado
+    };
+
     const response = await fetch('http://mysql-agility.advogadodigital.click:3333/gerar-docx', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({ clienteNome, clienteCPF }),
+      body: JSON.stringify(data),
     });
   
     if (response.ok) {
@@ -1222,7 +1342,7 @@ async function gerarDocumento() {
       a.href = url;
   
       // Defina o nome do arquivo para download
-      a.download = `${clienteNome}_Declaracao_Hipossuficiencia.docx`;
+      a.download = `${clienteID}_${clienteNome}_Declaracao_Hipossuficiencia.docx`;
   
       // Anexe o link ao corpo do documento
       document.body.appendChild(a);
@@ -1252,19 +1372,22 @@ async function renderizarTabelaClientesDocumentos() {
         // Limpar o conteúdo atual da tabela
         tbody.innerHTML = '';
 
+        
+            
         // Renderizar os novos dados na tabela
         clientes.forEach((cliente) => {
             const tr = document.createElement('tr');
             tr.classList.add('bg-white', 'border-b', 'dark:bg-gray-800', 'dark:border-gray-700', 'hover:bg-gray-50', 'dark:hover:bg-gray-600');
 
             // Adicionar as células da linha
-            Object.values(cliente).forEach((value) => {
+            Object.entries(cliente).forEach(([key, value]) => {
                 const td = document.createElement('td');
                 td.classList.add('px-6', 'py-3');
             
-                // Verificar se o valor é uma string antes de aplicar a formatação
-                const textoFormatado = typeof value === 'string' ? value.replace(/\b\w+/g, substr => substr.charAt(0).toUpperCase() + substr.slice(1).toLowerCase()).replace(/\b\w+(?=\))/g, substr => substr.toLowerCase()) : value;
-                td.textContent = textoFormatado;
+                if (['cep', 'rua',  'numero', 'complemento', 'bairro', 'orgemissor', 'estado'].includes(key)) {
+                    td.classList.add('hidden');}
+            
+                td.textContent = value;
                 td.setAttribute('onclick', 'preencherNomeClienteDocumentos(parentNode)');
                 tr.appendChild(td);
 
@@ -1292,12 +1415,41 @@ async function buscarClientesDocumentos() {
 
 function preencherNomeClienteDocumentos(tr) {
     // Preencher os campos do formulário no modal com os dados do cliente
-    
+
+    const id_cliente = tr.children[0].innerText;
     const nome = tr.children[1].innerText; 
-    const cpf = tr.children[2].innerText;
+    const profissao = tr.children[2].innerText;
+    const estadocivil = tr.children[3].innerText; 
+    const telefone = tr.children[4].innerText; 
+    const rg = tr.children[5].innerText; 
+    const orgemissor = tr.children[6].innerText; 
+    const cpf = tr.children[7].innerText; 
+    const email = tr.children[8].innerText; 
+    const cep = tr.children[9].innerText; 
+    const rua = tr.children[10].innerText; 
+    const numero = tr.children[11].innerText; 
+    const complemento = tr.children[12].innerText; 
+    const bairro = tr.children[13].innerText; 
+    const cidade = tr.children[14].innerText; 
+    const estado = tr.children[15].innerText; 
+
+    document.getElementById('id-cliente').value = id_cliente;
     document.getElementById('nome-cliente').value = nome;
-    document.getElementById('cpf-cliente').value = cpf
-    
+    document.getElementById('cpf-cliente').value = cpf;
+    document.getElementById('estadocivil-cliente').value = estadocivil;
+    document.getElementById('profissao-cliente').value = profissao;
+    document.getElementById('rg-cliente').value = rg;
+    document.getElementById('orgemissor-cliente').value = orgemissor;
+    document.getElementById('telefone-cliente').value = telefone;
+    document.getElementById('email-cliente').value = email;
+    document.getElementById('cep-cliente').value = cep;
+    document.getElementById('rua-cliente').value = rua;
+    document.getElementById('numero-cliente').value = numero;
+    document.getElementById('complemento-cliente').value = complemento;
+    document.getElementById('bairro-cliente').value = bairro;
+    document.getElementById('cidade-cliente').value = cidade;
+    document.getElementById('estado-cliente').value = estado;
+
     const closeModalCliente = document.getElementById('closeModalCliente');
     closeModalCliente.click();
 }
