@@ -1384,18 +1384,17 @@ async function gerarDocumento() {
 
 // CLIENTES
 
-async function renderizarTabelaClientesDocumentos() {
+async function renderizarTabelaClientesDocumentos(event) {
     event.preventDefault();
     const tbody = document.querySelector('tbody');
+    const searchTerm = document.getElementById('nome').value.trim(); // Capturar o valor do campo de entrada
 
     try {
-        // Buscar clientes no backend
-        const clientes = await buscarClientesDocumentos();
+        // Buscar clientes no backend com o termo de pesquisa
+        const clientes = await buscarClientesDocumentos(searchTerm);
         // Limpar o conteúdo atual da tabela
         tbody.innerHTML = '';
 
-        
-            
         // Renderizar os novos dados na tabela
         clientes.forEach((cliente) => {
             const tr = document.createElement('tr');
@@ -1406,13 +1405,12 @@ async function renderizarTabelaClientesDocumentos() {
                 const td = document.createElement('td');
                 td.classList.add('px-6', 'py-3');
             
-                if (['cep', 'rua',  'numero', 'complemento', 'bairro', 'orgemissor', 'estado'].includes(key)) {
+                if (['cidade', 'estadocivil', 'telefone', 'email', 'rg', 'cep', 'rua',  'numero', 'complemento', 'bairro', 'orgemissor', 'estado'].includes(key)) {
                     td.classList.add('hidden');}
             
                 td.textContent = value;
                 td.setAttribute('onclick', 'preencherNomeClienteDocumentos(parentNode)');
                 tr.appendChild(td);
-
             });
         
             tbody.appendChild(tr);
@@ -1423,10 +1421,11 @@ async function renderizarTabelaClientesDocumentos() {
     initFlowbite();
 }
 
-async function buscarClientesDocumentos() { 
+
+async function buscarClientesDocumentos(searchTerm = '') { 
     try {
         const tenant = userInfo.id_tenant;
-        const resposta = await fetch(`http://mysql-agility.advogadodigital.click:3333/clientes/${tenant}`);
+        const resposta = await fetch(`http://mysql-agility.advogadodigital.click:3333/clientes/${tenant}?search=${searchTerm}`);
         const clientes = await resposta.json();
         return clientes;
     } catch (error) {
@@ -1434,6 +1433,7 @@ async function buscarClientesDocumentos() {
         throw error;
     }
 }
+
 
 function preencherNomeClienteDocumentos(tr) {
     // Preencher os campos do formulário no modal com os dados do cliente
