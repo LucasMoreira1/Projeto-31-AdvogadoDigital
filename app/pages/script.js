@@ -2,6 +2,8 @@
 // Constantes / Variáveis Globais
 //
 let sortDirection = 1;
+const monthNames = ["Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho", "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro"];
+let currentDate = new Date();
 
 //
 // DarkMode
@@ -1536,3 +1538,62 @@ function preencherNomeReuDocumentos(tr) {
 }
 
 // FIM DOCUMENTOS
+
+//
+// AGENDA
+//
+
+function renderCalendar(date) {
+    const month = date.getMonth();
+    const year = date.getFullYear();
+
+    // Define o primeiro dia do mês
+    const firstDay = new Date(year, month, 1).getDay();
+    const lastDate = new Date(year, month + 1, 0).getDate();
+
+    // Atualiza o cabeçalho com o mês e o ano atual
+    document.getElementById('monthYear').textContent = `${monthNames[month]} ${year}`;
+
+    // Gera o corpo do calendário
+    const calendarBody = document.getElementById('calendarBody');
+    calendarBody.innerHTML = '';
+
+    let row = document.createElement('tr');
+    // Preencher os dias vazios antes do primeiro dia do mês
+    for (let i = 0; i < (firstDay === 0 ? 6 : firstDay - 1); i++) {
+        const cell = document.createElement('td');
+        cell.classList.add('empty');
+        row.appendChild(cell);
+    }
+
+    // Preencher os dias do mês
+    for (let day = 1; day <= lastDate; day++) {
+        if (row.children.length === 7) {
+            calendarBody.appendChild(row);
+            row = document.createElement('tr');
+        }
+
+        const cell = document.createElement('td');
+        cell.textContent = day;
+        cell.classList.add('active');
+        row.appendChild(cell);
+    }
+
+    // Preencher os dias vazios após o último dia do mês
+    while (row.children.length < 7) {
+        const cell = document.createElement('td');
+        cell.classList.add('empty');
+        row.appendChild(cell);
+    }
+    calendarBody.appendChild(row);
+}
+
+document.getElementById('prevMonth').addEventListener('click', () => {
+    currentDate.setMonth(currentDate.getMonth() - 1);
+    renderCalendar(currentDate);
+});
+
+document.getElementById('nextMonth').addEventListener('click', () => {
+    currentDate.setMonth(currentDate.getMonth() + 1);
+    renderCalendar(currentDate);
+});

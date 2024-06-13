@@ -301,8 +301,9 @@
                 .then(data => {
                     // Mostrar o conteúdo do template na home
                     contentArea.innerHTML = data;
-
+                    let currentDate = new Date();
                     // Iniciar componentes do Flowbite
+                    renderCalendar(currentDate);
                     initFlowbite();
                 });
         });
