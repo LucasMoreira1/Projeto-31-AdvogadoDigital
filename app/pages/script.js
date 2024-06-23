@@ -1597,3 +1597,48 @@ document.getElementById('nextMonth').addEventListener('click', () => {
     currentDate.setMonth(currentDate.getMonth() + 1);
     renderCalendar(currentDate);
 });
+
+//
+// CHAT
+//
+
+async function sendMessage() {
+    const userMessageInput = document.getElementById('userMessage');
+    const userMessage = userMessageInput.value.trim();
+    if (userMessage === '') return;
+
+    // Adiciona a mensagem do usuário ao chat
+    addMessage(userMessage, 'user-message');
+
+    // Limpa o campo de entrada
+    userMessageInput.value = '';
+
+    try {
+        const response = await fetch('http://mysql-agility.advogadodigital.click:3333/chat', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ message: userMessage, senderName: 'Usuário' }) // Passa o nome do remetente
+        });
+        const data = await response.json();
+
+        if (response.ok) {
+            addMessage(data.response, 'gemini-message');
+        } else {
+            addMessage('Erro ao enviar a mensagem.', 'gemini-message');
+        }
+    } catch (error) {
+        console.error('Erro ao enviar a mensagem:', error);
+        addMessage('Erro ao enviar a mensagem.', 'gemini-message');
+    }
+}
+
+function addMessage(text, className) {
+    const messagesContainer = document.getElementById('messages');
+    const messageElement = document.createElement('div');
+    messageElement.className = `message ${className}`;
+    messageElement.innerText = text;
+    messagesContainer.appendChild(messageElement);
+    messagesContainer.scrollTop = messagesContainer.scrollHeight;
+}

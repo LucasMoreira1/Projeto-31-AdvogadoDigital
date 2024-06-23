@@ -58,7 +58,7 @@
 
 <!-- drawer component -->
 <div id="drawer-navigation" class="fixed top-0 left-0 z-40 w-64 h-screen p-4 pt-28 overflow-y-auto transition-transform -translate-x-full bg-white dark:bg-gray-800" tabindex="-1" aria-labelledby="drawer-navigation-label">
-    <h5 id="drawer-navigation-label" class="text-base font-semibold text-gray-500 uppercase dark:text-gray-400">Menu</h5>
+    <h5 id="drawer-navigation-label" class="text-base font-semibold text-gray-500 uppercase dark:text-gray-400"></h5>
     <button type="button" data-drawer-hide="drawer-navigation" aria-controls="drawer-navigation" class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm p-1.5 absolute top-2.5 right-2.5 inline-flex items-center dark:hover:bg-gray-600 dark:hover:text-white" >
         
     </button>
@@ -106,6 +106,14 @@
         </a>
     </li>
     <li>
+        <a data-drawer-hide="drawer-navigation" href="#" id="chatBtn" class="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group">
+        <svg class="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
+            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7.529 7.988a2.502 2.502 0 0 1 5 .191A2.441 2.441 0 0 1 10 10.582V12m-.01 3.008H10M19 10a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"/>
+        </svg>
+        <span class="flex-1 ml-3 whitespace-nowrap">Assistente Virtual - ChatGPT</span>
+        </a>
+    </li>
+    <li>
         <a data-drawer-hide="drawer-navigation" href="#" id="financeiroBtn" class="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group">
             <svg class="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
                 <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11.905 1.316 15.633 6M18 10h-5a2 2 0 0 0-2 2v1a2 2 0 0 0 2 2h5m0-5a1 1 0 0 1 1 1v3a1 1 0 0 1-1 1m0-5V7a1 1 0 0 0-1-1H2a1 1 0 0 0-1 1v11a1 1 0 0 0 1 1h15a1 1 0 0 0 1-1v-3m-6.367-9L7.905 1.316 2.352 6h9.281Z"/>
@@ -130,6 +138,8 @@
         <span class="flex-1 ml-3 whitespace-nowrap">Dúvidas</span>
         </a>
     </li>
+
+    
         
     </ul>
 </div>
@@ -206,13 +216,20 @@
         const tenant = userInfo.nometenant;
         const nome = userInfo.nome;
         const email = userInfo.email;
+
+        function capitalizeFirstLetter(string) {
+            return string.charAt(0).toUpperCase() + string.slice(1);
+        }
+
+        const nomeCapitalizado = capitalizeFirstLetter(nome);
         
         // Agora você pode usar essas informações conforme necessário na sua página
         // Por exemplo, para definir o título da página
-        document.title = `Advogado Digital | ${tenant}`;
-        document.getElementById('menu-nome').innerText = `${nome}`;
+        document.title = `Advogado Digital | ${tenant}`;        
+        document.getElementById('drawer-navigation-label').innerText = `${tenant}`;
+        document.getElementById('menu-nome').innerText = `${nomeCapitalizado}`;
         document.getElementById('menu-email').innerText = `${email}`;
-        document.getElementById('bemVindo').innerText = `Bem vindo novamente ${nome}.`;
+        document.getElementById('bemVindo').innerText = `Bem vindo novamente ${nomeCapitalizado}.`;
         }
 
         // Adicione um ouvinte de evento para o botão de logout
@@ -334,6 +351,18 @@
         duvidasBtn.addEventListener("click", () => {
             // Carregar o template da página
             fetch("/app/pages/duvidas.html")
+                .then(response => response.text())
+                .then(data => {
+                    // Mostrar o conteúdo do template na home
+                    contentArea.innerHTML = data;
+
+                    // Iniciar componentes do Flowbite
+                    initFlowbite();
+                });
+        });
+        chatBtn.addEventListener("click", () => {
+            // Carregar o template da página
+            fetch("/app/pages/chat.html")
                 .then(response => response.text())
                 .then(data => {
                     // Mostrar o conteúdo do template na home
